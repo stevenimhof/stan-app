@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
+
+import {AboutPage} from "../about/about";
 
 /**
  * Generated class for the SettingsPage page.
@@ -16,6 +18,11 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 export class SettingsPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+  }
+
+  //TODO: übergib die neue Seite als item und nicht hart codiert
+  itemSelected(item) {
+    this.navCtrl.push(AboutPage);
   }
 
   ionViewDidLoad() {
