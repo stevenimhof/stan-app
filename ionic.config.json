@@ -1,0 +1,8 @@
+{
+  "name": "flowly-app",
+  "app_id": "143d9f28",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
