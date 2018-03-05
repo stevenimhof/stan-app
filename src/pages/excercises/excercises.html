@@ -7,12 +7,19 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>excercises</ion-title>
+    <ion-title>Übungen</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+  <ion-card>
+    <ion-list>
+      <button ion-item *ngFor="let excercise of excercises" (click)="excerciseSelected(event, excercise)">
+        <h2>{{excercise[0]}}</h2>
+        <p>{{excercise[1]}}</p>
+      </button>
+    </ion-list>
+  </ion-card>
 </ion-content>
