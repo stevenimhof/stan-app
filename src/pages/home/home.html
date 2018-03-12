@@ -10,3 +10,12 @@
     Bachelorarbeit von Steven Imhof und Alexander Nakamura
   </p>
 </ion-content>
+
+<ion-footer>
+  <ion-badge>
+    <h3>täglicher Motivationsspruch:</h3>
+    <p>{{dayliMotivation}}</p>
+  </ion-badge>
+  <button ion-button (click)="changeMotivation()">new Motivation</button>
+</ion-footer>
+
