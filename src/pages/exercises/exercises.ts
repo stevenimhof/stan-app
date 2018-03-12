@@ -12,7 +12,7 @@ import {ExerciseProvider} from '../../providers/exercise/exercise';
 export class ExercisesPage {
   shownCategory = null;
   categories = [];
-  exercises = [];
+  exercises;
 
   constructor(
     public navCtrl: NavController,
