@@ -1,0 +1,31 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Übungen</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <div *ngFor="let category of categories">
+      <ion-item class="item-stable"
+        (click)="toggleCategory(category)"
+        [ngClass]="{active: isCategoryShown(category)}"
+        [style.backgroundColor]=category.color >
+        <ion-icon [name]="isCategoryShown(category) ? 'arrow-down' : 'arrow-forward'"></ion-icon>
+        &nbsp;
+        {{category.name}}
+      </ion-item>
+      <ion-item class="item-accordion"
+        *ngFor="let exercise of category.exercises"
+        [ngClass]="{'custom-fadeout':!isCategoryShown(category)}">
+        <ion-label no-margin (click)="loadExercise(exercise)">
+          {{exercise.title.rendered}}
+        </ion-label>
+      </ion-item>
+    </div>
+  </ion-list>
+
+</ion-content>

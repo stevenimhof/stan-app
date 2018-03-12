@@ -7,16 +7,16 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Übung xyz</ion-title>
+    <ion-title>{{exercise.title.rendered}}</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <h2>Übung xyz</h2>
-  <p>Das ist eine Beispielübung</p>
+  <div [innerHtml]=exercise.content.rendered></div>
 
+  <hr>
   <ion-grid>
     <ion-row>
       <ion-col col-7>
