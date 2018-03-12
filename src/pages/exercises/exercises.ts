@@ -11,24 +11,14 @@ import {ExerciseProvider} from '../../providers/exercise/exercise';
 })
 export class ExercisesPage {
   shownCategory = null;
-  groups = [];
   categories = [];
-  exercises   = [];
+  exercises = [];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private exerciseProvider: ExerciseProvider,
     private loadingController: LoadingController) {
-    for (var i=0; i<10; i++) {
-      this.groups[i] = {
-        name: i,
-        items: []
-      };
-      for (var j=0; j<3; j++) {
-        this.groups[i].items.push(i + '-' + j);
-      }
-    }
 
     if (!this.categories.length || !this.exercises.length) {
       this.getData();
