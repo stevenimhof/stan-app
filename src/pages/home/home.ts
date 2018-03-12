@@ -37,5 +37,4 @@ export class HomePage {
     this.lastUpdated = currentDate;
     return newMotivation + ' (Datum: ' + this.lastUpdated + '    )';
   }
-
 }
