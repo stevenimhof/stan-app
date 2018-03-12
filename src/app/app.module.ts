@@ -17,6 +17,7 @@ import {ExercisePage} from "../pages/exercise/exercise";
 import {TheoryPage} from "../pages/theory/theory";
 
 import { HttpClientModule } from '@angular/common/http';
+import { IonicStorageModule } from '@ionic/storage';
 
 import { ExerciseProvider } from '../providers/exercise/exercise';
 
@@ -35,7 +36,8 @@ import { ExerciseProvider } from '../providers/exercise/exercise';
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    HttpClientModule
+    HttpClientModule,
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
