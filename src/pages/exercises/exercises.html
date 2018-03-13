@@ -14,7 +14,7 @@
       <ion-item class="item-stable"
         (click)="toggleCategory(category)"
         [ngClass]="{active: isCategoryShown(category)}"
-        [style.backgroundColor]=category.color >
+        [style.borderColor]=category.color>
         <ion-icon [name]="isCategoryShown(category) ? 'arrow-down' : 'arrow-forward'"></ion-icon>
         &nbsp;
         {{category.name}}
