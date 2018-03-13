@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {SettingsPage} from "../settings/settings";
 
 @Component({
   selector: 'page-home',
@@ -11,7 +12,7 @@ export class HomePage {
 
   constructor(public navCtrl: NavController) {
     this.dayliMotivation = this.getDayliMotivation();
-    this.lastUpdated = new Date(0).toJSON().slice(0,10).replace(/-/g,'/');
+    this.lastUpdated = new Date(0).toJSON().slice(0, 10).replace(/-/g, '/');
   }
 
   motivations = [
@@ -19,19 +20,23 @@ export class HomePage {
     'Du schaffst das!',
     'Mach weiter so!',
     'Bald geschafft!'
-    ];
+  ];
 
   changeMotivation() {
-    this.lastUpdated = new Date(0).toJSON().slice(0,10).replace(/-/g,'/');
+    this.lastUpdated = new Date(0).toJSON().slice(0, 10).replace(/-/g, '/');
     this.dayliMotivation = this.getDayliMotivation();
   }
 
-  getDayliMotivation () {
-    var currentDate = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+  loadSettings() {
+    this.navCtrl.push(SettingsPage);
+  }
+
+  getDayliMotivation() {
+    var currentDate = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
     if (currentDate != this.lastUpdated) {
       var newMotivation = '';
       do {
-        newMotivation = this.motivations[Math.floor(Math.random()*this.motivations.length)];
+        newMotivation = this.motivations[Math.floor(Math.random() * this.motivations.length)];
       } while (this.dayliMotivation == newMotivation);
     }
     this.lastUpdated = currentDate;
