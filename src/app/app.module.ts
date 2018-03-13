@@ -6,15 +6,16 @@ import {Config} from './app.config';
 
 import {HomePage} from '../pages/home/home';
 import {ExercisesPage} from "../pages/exercises/exercises";
+import {ExercisePage} from "../pages/exercise/exercise";
 import {TheoriesPage} from "../pages/theories/theories";
+import {TheoryPage} from "../pages/theory/theory";
+import {InfoPage} from "../pages/info/info";
+import {TabsPage} from '../pages/tabs/tabs';
 import {SettingsPage} from "../pages/settings/settings";
 import {AboutPage} from '../pages/about/about';
-import {TabsPage} from '../pages/tabs/tabs';
 
 import {StatusBar} from '@ionic-native/status-bar';
 import {SplashScreen} from '@ionic-native/splash-screen';
-import {ExercisePage} from "../pages/exercise/exercise";
-import {TheoryPage} from "../pages/theory/theory";
 
 import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
@@ -29,9 +30,10 @@ import { ExerciseProvider } from '../providers/exercise/exercise';
     ExercisePage,
     TheoriesPage,
     TheoryPage,
+    InfoPage,
+    TabsPage,
     SettingsPage,
-    AboutPage,
-    TabsPage
+    AboutPage
   ],
   imports: [
     BrowserModule,
@@ -47,9 +49,10 @@ import { ExerciseProvider } from '../providers/exercise/exercise';
     ExercisePage,
     TheoriesPage,
     TheoryPage,
+    InfoPage,
+    TabsPage,
     SettingsPage,
-    AboutPage,
-    TabsPage
+    AboutPage
   ],
   providers: [
     StatusBar,
