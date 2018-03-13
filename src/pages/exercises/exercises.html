@@ -8,6 +8,7 @@
 
 
 <ion-content padding>
+  <button ion-button (click)="deleteStorage()">Delete storage</button>
   <ion-list>
     <div *ngFor="let category of categories">
       <ion-item class="item-stable"
@@ -27,5 +28,4 @@
       </ion-item>
     </div>
   </ion-list>
-
 </ion-content>

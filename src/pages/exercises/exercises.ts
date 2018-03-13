@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
 
 import {ExercisePage} from '../exercise/exercise';
 import {ExerciseProvider} from '../../providers/exercise/exercise';
@@ -18,33 +19,42 @@ export class ExercisesPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private exerciseProvider: ExerciseProvider,
-    private loadingController: LoadingController) {
+    private alertCtrl: AlertController) {
 
     if (!this.categories.length || !this.exercises.length) {
       this.getData();
     }
+  }
 
+  deleteStorage() {
+    this.exerciseProvider.deleteExercises();
   }
 
   getData() {
-    let loader = this.loadingController.create({
-      content: "Please wait"
-    });
-    loader.present();
-
     this.exerciseProvider.getCategories()
-    .subscribe(result => {
+    .then(result => {
       this.categories = result;
 
       this.exerciseProvider.getExercises()
-      .subscribe(result => {
+      .then(result => {
         this.exercises = result;
-
         this.prepareData();
-        loader.dismiss();
+
+        if (!this.categories.length || !this.exercises.length) {
+          this.showErrorAlert();
+        }
       });
 
     });
+  }
+
+  showErrorAlert() {
+    let alert = this.alertCtrl.create({
+      title: 'Keine Daten vorhanden',
+      subTitle: 'Bitte überprüfe deine Internet-Verbidung',
+      buttons: ['Dismiss']
+    });
+    alert.present();
   }
 
   prepareData() {
