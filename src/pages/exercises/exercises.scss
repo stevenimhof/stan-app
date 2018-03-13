@@ -1,17 +1,29 @@
 page-exercises {
-  .list .item.item-accordion {
-    line-height: 38px;
-    padding-top: 0;
-    padding-bottom: 0;
-    transition: 0.09s all linear;
-  }
-  .list .item.item-accordion.custom-fadeout {
-    line-height: 0px;
-    min-height: 0px;
-    opacity: 0;
-  }
+  .list {
+    .item {
+      border-left: 7px solid transparent;
+      padding-left: 0px;
 
-  .list .item.item-accordion.custom-fadeout .item-inner {
-    border:0;
+      .item-inner {
+        padding-left: 16px;
+      }
+
+      &.item-accordion {
+        line-height: 38px;
+        padding-top: 0;
+        padding-bottom: 0;
+        transition: 0.09s all linear;
+
+        &.custom-fadeout {
+          line-height: 0px;
+          min-height: 0px;
+          opacity: 0;
+
+          .item-inner {
+            border:0;
+          }
+        }
+      }
+    }
   }
 }
