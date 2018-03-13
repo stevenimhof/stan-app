@@ -20,8 +20,7 @@ export class SettingsPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  //TODO: übergib die neue Seite als item und nicht hart codiert
-  itemSelected(item) {
+  loadAbout() {
     this.navCtrl.push(AboutPage);
   }
 
