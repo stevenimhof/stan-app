@@ -21,6 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { ExerciseProvider } from '../providers/exercise/exercise';
+import { MotivationProvider } from '../providers/motivation/motivation';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { ExerciseProvider } from '../providers/exercise/exercise';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ExerciseProvider,
-    Config
+    Config,
+    MotivationProvider
   ]
 })
 export class AppModule {
