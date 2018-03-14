@@ -21,6 +21,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { ExerciseProvider } from '../providers/exercise/exercise';
+import { KeepHtmlPipe } from '../pipes/keep-html/keep-html';
+import { AccordionComponent } from '../components/accordion/accordion';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { ExerciseProvider } from '../providers/exercise/exercise';
     InfoPage,
     TabsPage,
     SettingsPage,
-    AboutPage
+    AboutPage,
+    KeepHtmlPipe,
+    AccordionComponent
   ],
   imports: [
     BrowserModule,

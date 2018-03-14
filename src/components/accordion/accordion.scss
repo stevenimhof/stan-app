@@ -1,0 +1,25 @@
+accordion {
+
+    .title {
+        padding: 10px;
+        background: #ddd;
+        border: 1px solid #eee;
+    }
+
+    .accordion-wrapper {
+        transition: 0.2s linear;
+    } 
+
+    .content {
+        overflow:hidden;
+        transition:max-height 0.3s cubic-bezier(1,0,1,0);
+        height:auto;
+        //max-height:9999px; // pump it ALL the way up!
+        &.collapsed {
+            height: 0 !important;
+            max-height: 0;
+            //transition: max-height 0.3s cubic-bezier(0,1,0,1);
+        }
+    }
+ 
+}
