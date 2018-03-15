@@ -1,6 +1,8 @@
 <div>
   <div class='title' (click)="toggle()">{{headline}}</div>
   <div #accordionWrapper class='content' [class.collapsed]="collapsed">
-    <ng-content></ng-content>
+    <div class="inner">
+      <ng-content></ng-content>
+    </div>
   </div>
 </div>

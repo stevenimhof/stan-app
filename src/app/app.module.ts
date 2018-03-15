@@ -23,6 +23,8 @@ import { IonicStorageModule } from '@ionic/storage';
 import { ExerciseProvider } from '../providers/exercise/exercise';
 import { KeepHtmlPipe } from '../pipes/keep-html/keep-html';
 import { AccordionComponent } from '../components/accordion/accordion';
+import { Network } from '@ionic-native/network';
+
 
 @NgModule({
   declarations: [
@@ -63,7 +65,8 @@ import { AccordionComponent } from '../components/accordion/accordion';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ExerciseProvider,
-    Config
+    Config,
+    Network
   ]
 })
 export class AppModule {

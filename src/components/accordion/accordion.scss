@@ -3,7 +3,6 @@ accordion {
     .title {
         padding: 10px;
         background: #ddd;
-        border: 1px solid #eee;
     }
 
     .accordion-wrapper {
@@ -11,6 +10,7 @@ accordion {
     } 
 
     .content {
+        border:1px solid #ddd;
         overflow:hidden;
         transition:max-height 0.3s cubic-bezier(1,0,1,0);
         height:auto;
@@ -19,6 +19,9 @@ accordion {
             height: 0 !important;
             max-height: 0;
             //transition: max-height 0.3s cubic-bezier(0,1,0,1);
+        }
+        .inner {
+            padding: 10px;
         }
     }
  

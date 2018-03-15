@@ -10,13 +10,15 @@
 <ion-content padding>
   <div [innerHtml]=exercise.content.rendered></div>
   <hr>
-  <div *ngIf="exercise.acf.theory" [innerHtml]="exercise.acf.theory"></div>
 
-  
   <accordion *ngIf="exercise.acf.theory" headline="asdfasdf" collapsed="!collapsed">
-    {{exercise.acf.theory}}
-
-    <iframe *ngIf="videoSrc" [src]="videoSrc" frameborder="0" allowfullscreen="true"></iframe>
+    <div *ngIf="exercise.acf.theory" [innerHtml]="exercise.acf.theory"></div>
+    <iframe *ngIf="hasInternetConnectivity && videoSrc" [src]="videoSrc" frameborder="0" allowfullscreen="true"></iframe>
+    <ion-card *ngIf="!hasInternetConnectivity">
+        <ion-card-content>
+            <ion-icon name="alert"></ion-icon> No Internet connection. Please check your connection to see an addtional video.
+        </ion-card-content>
+      </ion-card>
   </accordion>
   <hr>
   <ion-grid>
