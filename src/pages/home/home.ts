@@ -12,11 +12,12 @@ export class HomePage {
 
   constructor(public navCtrl: NavController,
               private motivationProvider: MotivationProvider) {
-    this.dayliMotivation = this.motivationProvider.getDayliMotivation();
+    this.dayliMotivation = this.motivationProvider.dayliMotivation;
   }
 
   changeMotivation() {
-    this.dayliMotivation = this.motivationProvider.changeMotivation();
+    this.motivationProvider.changeMotivation();
+    this.dayliMotivation = this.motivationProvider.dayliMotivation;
   }
 
   loadSettings() {

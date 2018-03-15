@@ -1,5 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 import {Config} from '../../app/app.config';
 import {Storage} from '@ionic/storage';
 
@@ -13,6 +14,7 @@ import {Storage} from '@ionic/storage';
 export class MotivationProvider {
   dayliMotivation;
   lastUpdated;
+  localMotivationPromise;
   motivations = [
     'Bleib Stark',
     'Du schaffst das!',
@@ -24,7 +26,7 @@ export class MotivationProvider {
               private config: Config,
               private storage: Storage) {
     this.lastUpdated = new Date(0).toJSON().slice(0, 10).replace(/-/g, '/');
-
+    this.dayliMotivation = this.getDayliMotivation();
   }
 
   getDayliMotivation() {
@@ -36,12 +38,35 @@ export class MotivationProvider {
       } while (this.dayliMotivation == newMotivation);
     }
     this.lastUpdated = currentDate;
-    this.dayliMotivation = newMotivation;
-    return this.dayliMotivation;
+    return newMotivation;
   }
+
   changeMotivation() {
     this.lastUpdated = new Date(0).toJSON().slice(0, 10).replace(/-/g, '/');
     this.dayliMotivation = this.getDayliMotivation();
-    return this.dayliMotivation;
+  }
+
+  //TODO: implement the rest-call for motivations in app.components.ts
+  //Frage: macht es nicht mehr Sinn, den localStorage in den Providers anzulegen, statt im app.components.ts??
+  setLocalExercisesPromis() {
+    if (!this.localMotivationPromise) {
+      this.localMotivationPromise = this.storage.get('exercises');
+    }
+  }
+
+  getMotivations() {
+    this.setLocalExercisesPromis();
+    return this.localMotivationPromise.then((localMotivations) => {
+      console.log("get motivations from localStorage");
+      return (localMotivations && localMotivations['motivations']) ? localMotivations['exercises'] : [];
+    });
+  }
+
+  getMotivationsFromWordpress() {
+    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/motivation')
+      .map(result => {
+        return result;
+      })
+      .catch(error => Observable.throw("Error while trying to get motivations-data from server"));
   }
 }
