@@ -19,12 +19,12 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 
 import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
-
-import { ExerciseProvider } from '../providers/exercise/exercise';
 import { KeepHtmlPipe } from '../pipes/keep-html/keep-html';
 import { AccordionComponent } from '../components/accordion/accordion';
 import { Network } from '@ionic-native/network';
 
+import { ExerciseProvider } from '../providers/exercise/exercise';
+import { MotivationProvider } from '../providers/motivation/motivation';
 
 @NgModule({
   declarations: [
@@ -65,6 +65,7 @@ import { Network } from '@ionic-native/network';
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ExerciseProvider,
+    MotivationProvider,
     Config,
     Network
   ]
