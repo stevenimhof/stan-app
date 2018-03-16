@@ -69,11 +69,9 @@ export class ExerciseProvider {
         return result;
       })
       .catch(error => Observable.throw("Error while trying to get data from server"));
-
   }
 
   deleteExercises() {
     this.storage.remove('exercises');
   }
-
 }
