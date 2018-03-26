@@ -17,10 +17,10 @@
 </ion-content>
 
 <ion-footer>
-  <ion-badge>
+  <ion-badge *ngIf="dailyMotivation">
     <h3>täglicher Motivationsspruch:</h3>
-    <p>{{dayliMotivation}}</p>
+    <p>{{dailyMotivation.content.rendered}}</p>
   </ion-badge>
-  <button ion-button (click)="changeMotivation()">new Motivation</button>
+  <button ion-button (click)="changeMotivation()">setOldDate</button>
 </ion-footer>
 
