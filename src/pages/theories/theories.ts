@@ -1,9 +1,8 @@
-import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
 
-import {TheoryPage} from "../theory/theory";
+import { TheoryPage } from "../theory/theory";
 
-@IonicPage()
 @Component({
   selector: 'page-theories',
   templateUrl: 'theories.html',

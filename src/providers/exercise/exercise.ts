@@ -50,11 +50,12 @@ export class ExerciseProvider {
               "exercises": exercises,
               "categories": categories,
               "evaluations": []
+            }).then(() => {
+              this.emitExercisesDidLoad();
             });
-
+          } else {
             this.emitExercisesDidLoad();
           }
-          this.emitExercisesDidLoad();
         });
       });
     });

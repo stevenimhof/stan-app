@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Events } from 'ionic-angular';
 
-import {ExercisePage} from '../exercise/exercise';
-import {ExerciseProvider} from '../../providers/exercise/exercise';
+import { ExercisePage } from '../exercise/exercise';
+import { ExerciseProvider } from '../../../providers/exercise/exercise';
 
-@IonicPage()
 @Component({
   selector: 'page-exercises',
   templateUrl: 'exercises.html',
@@ -20,17 +19,26 @@ export class ExercisesPage {
     public navParams: NavParams,
     private exerciseProvider: ExerciseProvider,
     private events: Events) {
-    this.listenForExercisesDidLoad();
-  }
 
-  public listenForExercisesDidLoad() {
-    this.events.subscribe('exercises:loaded', () => {
+    this.listenForExercisesDidLoad();
+    if (!this.categories.length || !this.exercises.length) {
       this.getData();
-    });
+    }
   }
 
   public deleteStorage() {
     this.exerciseProvider.deleteExercises();
+  }
+
+  private listenForExercisesDidLoad() {
+    this.events.subscribe('exercises:loaded', () => {
+      this.getData();
+      this.unlistenForExercisesDidLoad();
+    });
+  }
+
+  private unlistenForExercisesDidLoad() {
+    this.events.unsubscribe('exercises:loaded', null);
   }
 
   private getData() {
@@ -39,7 +47,9 @@ export class ExercisesPage {
       this.exerciseProvider.getExercises().then(result => {
         this.exercises = result;
 
-        this.prepareData();
+        if (this.categories.length && this.exercises.length) {
+          this.prepareData();
+        }
       });
 
     });

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 import {HomePage} from '../home/home';
-import {ExercisesPage} from "../exercises/exercises";
+import {ExercisesPage} from "../exercises/exercises/exercises";
 import {TheoriesPage} from "../theories/theories";
 import {InfoPage} from "../info/info";
 
