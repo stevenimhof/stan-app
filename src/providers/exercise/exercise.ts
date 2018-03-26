@@ -50,7 +50,7 @@ export class ExerciseProvider {
   getExercises() {
     this.setLocalExercisesPromis();
     return this.localExercisesPromise.then((localExercises) => {
-      console.log("get exercises from localStorage");
+      //console.log("get exercises from localStorage");
       return (localExercises && localExercises['exercises']) ? localExercises['exercises'] : [];
     });
   }

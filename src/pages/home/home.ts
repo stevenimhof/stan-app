@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {Component, NgZone} from '@angular/core';
+import {NavController, Events} from 'ionic-angular';
 import {SettingsPage} from "../settings/settings";
 import {MotivationProvider} from "../../providers/motivation/motivation";
 
@@ -8,16 +8,30 @@ import {MotivationProvider} from "../../providers/motivation/motivation";
   templateUrl: 'home.html'
 })
 export class HomePage {
-  dayliMotivation;
+  dailyMotivation;
 
   constructor(public navCtrl: NavController,
-              private motivationProvider: MotivationProvider) {
-    this.dayliMotivation = this.motivationProvider.dayliMotivation;
+              private ngZone: NgZone,
+              private motivationProvider: MotivationProvider,
+              private events: Events) {
+    this.listenForMotivationsDidLoad();
   }
 
+  setDailyMotivation() {
+    this.motivationProvider.getDailyMotivation().then(motivation => {
+      this.dailyMotivation = motivation;
+    });
+  }
+
+  listenForMotivationsDidLoad() {
+    this.events.subscribe('motivations:loaded', () => {
+      this.setDailyMotivation();
+    });
+  }
+
+  // only for testing purposes
   changeMotivation() {
     this.motivationProvider.changeMotivation();
-    this.dayliMotivation = this.motivationProvider.dayliMotivation;
   }
 
   loadSettings() {

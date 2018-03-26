@@ -1,73 +1,155 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {Config} from '../../app/app.config';
-import {Storage} from '@ionic/storage';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Config } from '../../app/app.config';
+import { Storage } from '@ionic/storage';
+import { Events } from 'ionic-angular';
 
-/*
-  Generated class for the MotivationProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
 export class MotivationProvider {
-  dayliMotivation;
-  lastUpdated;
-  localMotivationPromise;
-  motivations = [
-    'Bleib Stark',
-    'Du schaffst das!',
-    'Mach weiter so!',
-    'Bald geschafft!'
-  ];
+  motivationStorageModel = {
+    'motivations': null,
+    'settings': {
+      'date': null,
+      'lastMotivationID': null
+    }
+  }
 
   constructor(public http: HttpClient,
-              private config: Config,
-              private storage: Storage) {
-    this.lastUpdated = new Date(0).toJSON().slice(0, 10).replace(/-/g, '/');
-    this.dayliMotivation = this.getDayliMotivation();
+    private config: Config,
+    private storage: Storage,
+    private events: Events) {
   }
 
-  getDayliMotivation() {
-    //TODO: nimm aktuelle mot aus array dann math.random
-    var currentDate = new Date().toJSON().slice(0, 10).replace(/-/g, '/'); //2018/03/16
-    if (currentDate != this.lastUpdated) {
-      var newMotivation = '';
-      do {
-        newMotivation = this.motivations[Math.floor(Math.random() * this.motivations.length)];
-      } while (this.dayliMotivation == newMotivation);
-    }
-    this.lastUpdated = currentDate;
-    return newMotivation;
-  }
-
-  changeMotivation() {
-    this.lastUpdated = new Date(0).toJSON().slice(0, 10).replace(/-/g, '/');
-    this.dayliMotivation = this.getDayliMotivation();
-  }
-
-  //TODO: implement the rest-call for motivations in app.components.ts
-  //Frage: macht es nicht mehr Sinn, den localStorage in den Providers anzulegen, statt im app.components.ts??
-  setLocalExercisesPromis() {
-    if (!this.localMotivationPromise) {
-      this.localMotivationPromise = this.storage.get('motivations');
-    }
-  }
-
-  getMotivations() {
-    this.setLocalExercisesPromis();
-    return this.localMotivationPromise.then((localMotivations) => {
-      console.log("get motivations from localStorage");
-      return (localMotivations && localMotivations['motivations']) ? localMotivations['motivations'] : [];
+  // only for testing purposes
+  public changeMotivation() {
+    this.getMotivationStorage().then(result => {
+      result.settings.date = new Date(0).toJSON().slice(0, 10).replace(/-/g, '/');
+      this.storage.set('motivations', result);
     });
   }
 
-  getMotivationsFromWordpress() {
+  public getMotivationsFromWordpress() {
     return this.http.get(this.config.wordpressApiUrl + '/wp/v2/motivation')
       .map(result => {
         return result;
       })
       .catch(error => Observable.throw("Error while trying to get motivations-data from server"));
+  }
+
+  public getDailyMotivation() {
+    return this.getMotivationStorage().then(localMotivations => {
+      const possibleDailyMotivations = this.getPossibleDailyMotivations(localMotivations);
+      const dailyMotivation = this.getRandomMotivation(possibleDailyMotivations);
+
+      this.saveMotivations({
+        ...localMotivations,
+        "settings": {
+          "date": this.getCurrentDate(),
+          "lastMotivationID": dailyMotivation.id
+        }
+      });
+      return dailyMotivation;
+    });
+  }
+
+  /**
+   * Checks for updates by comparing data from server and from local storage
+   * If there is a new version on the server, it will be saved in the local storage.
+   * In addition, it emits an event that motivations are now available via the storage.
+   */
+  public checkForUpdates() {
+    this.getMotivationStorage().then((localMotivations) => {
+      this.getMotivationsFromWordpress().subscribe(motivations => {
+        if (!this.compareMotivations(localMotivations, motivations)) {
+          const tempMotivations = {
+            ...localMotivations,
+            "motivations": motivations
+          };
+          this.saveMotivations(tempMotivations).then(() => {
+            this.emitMotivationsDidLoad();
+          });
+        } else {
+          this.emitMotivationsDidLoad();
+        }
+      });
+    });
+  }
+
+  /**
+   * Returns a possible daily motivations
+   * 
+   * Takes into account the last daiy motivation, if exists, and returns a random
+   * motivation which cannot be the same in a row.
+   */
+  private getPossibleDailyMotivations(localMotivations) {
+    let possibleDailyMotivations = localMotivations.motivations;
+    const lastDailyMotivationID = this.getLastDailyMotivationID(localMotivations);
+
+    if (this.hasLastDailyMotivation(localMotivations)) {
+      if (this.getLastDailyMotivationDate(localMotivations) === this.getCurrentDate()) {
+        possibleDailyMotivations = this.getMotivationByID(localMotivations, lastDailyMotivationID);
+      } else {
+        possibleDailyMotivations = this.getMotivationsFilteredByID(localMotivations, lastDailyMotivationID);
+      }
+    }
+    return possibleDailyMotivations;
+  }
+
+  private getMotivationByID(localMotivations, lastDailyMotivationID) {
+    return localMotivations.motivations.filter((motivation) => {
+      return motivation.id === lastDailyMotivationID;
+    });
+  }
+
+  private getMotivationsFilteredByID(localMotivations, lastDailyMotivationID) {
+    return localMotivations.motivations.filter((motivation) => {
+      return motivation.id !== lastDailyMotivationID;
+    });
+  };
+
+  private emitMotivationsDidLoad() {
+    this.events.publish('motivations:loaded', null, null);
+  }
+
+  private getRandomMotivation(motivations) {
+    const index = Math.floor(Math.random() * motivations.length);
+    return motivations[index];
+  }
+
+  private getCurrentDate() {
+    return new Date().toJSON().slice(0, 10).replace(/-/g, '/');
+  }
+
+  private hasLastDailyMotivation(motivations) {
+    return motivations.settings.lastMotivationID ? true : false;
+  }
+
+  private getLastDailyMotivationID(motivations) {
+    return motivations.settings.lastMotivationID;
+  }
+
+  private getLastDailyMotivationDate(motivations) {
+    return motivations.settings.date;
+  }
+
+  private compareMotivations(localMotivations, motivationsFromRest) {
+    return localMotivations && JSON.stringify(localMotivations['motivations']) == JSON.stringify(motivationsFromRest);
+  }
+
+  private saveMotivations(motivations) {
+    const tempMotivations = {
+      ...this.motivationStorageModel,
+      ...motivations
+    };
+    return this.getMotivationStorage().then(() => {
+      return this.storage.set('motivations', tempMotivations);
+    });
+  }
+
+  private getMotivationStorage() {
+    return this.storage.ready().then(() => {
+      return this.storage.get('motivations')
+    });
   }
 }
