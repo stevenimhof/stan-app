@@ -56,7 +56,7 @@ export class MotivationProvider {
   /**
    * Checks for updates by comparing data from server and from local storage
    * If there is a new version on the server, it will be saved in the local storage.
-   * In addition, it emits an event that motivations are now available via the storage.
+   * In addition, it emits an event that the data is now available via the storage.
    */
   public checkForUpdates() {
     this.getMotivationStorage().then((localMotivations) => {
