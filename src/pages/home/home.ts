@@ -17,24 +17,24 @@ export class HomePage {
     this.listenForMotivationsDidLoad();
   }
 
-  setDailyMotivation() {
+  // only for testing purposes
+  public changeMotivation() {
+    this.motivationProvider.changeMotivation();
+  }
+
+  public loadSettings() {
+    this.navCtrl.push(SettingsPage);
+  }
+
+  private setDailyMotivation() {
     this.motivationProvider.getDailyMotivation().then(motivation => {
       this.dailyMotivation = motivation;
     });
   }
 
-  listenForMotivationsDidLoad() {
+  private listenForMotivationsDidLoad() {
     this.events.subscribe('motivations:loaded', () => {
       this.setDailyMotivation();
     });
-  }
-
-  // only for testing purposes
-  changeMotivation() {
-    this.motivationProvider.changeMotivation();
-  }
-
-  loadSettings() {
-    this.navCtrl.push(SettingsPage);
   }
 }
