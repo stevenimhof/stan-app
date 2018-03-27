@@ -30,6 +30,24 @@ export class ExercisesPage {
     this.exerciseProvider.deleteExercises();
   }
 
+  public toggleCategory(category) {
+    if (this.isCategoryShown(category)) {
+      this.shownCategory = null;
+    } else {
+      this.shownCategory = category;
+    }
+  }
+
+  public isCategoryShown(category) {
+    return this.shownCategory === category;
+  }
+
+  public loadExercise(exercise) {
+    this.navCtrl.push(ExercisePage, {
+      exercise: exercise
+    });
+  }
+
   private listenForExercisesDidLoad() {
     this.events.subscribe('exercises:loaded', () => {
       this.getData();
@@ -52,24 +70,6 @@ export class ExercisesPage {
         }
       });
 
-    });
-  }
-
-  public toggleCategory(category) {
-    if (this.isCategoryShown(category)) {
-      this.shownCategory = null;
-    } else {
-      this.shownCategory = category;
-    }
-  }
-
-  public isCategoryShown(category) {
-    return this.shownCategory === category;
-  }
-
-  public loadExercise(exercise) {
-    this.navCtrl.push(ExercisePage, {
-      exercise: exercise
     });
   }
 
