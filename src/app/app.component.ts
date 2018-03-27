@@ -6,6 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ExerciseProvider } from '../providers/exercise/exercise';
 import { MotivationProvider } from '../providers/motivation/motivation';
+import { TheoryProvider } from '../providers/theory/theory';
 
 @Component({
   templateUrl: 'app.html'
@@ -17,6 +18,7 @@ export class MyApp {
     public platform: Platform,
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
+    private theory: TheoryProvider,
     private exerciseProvider: ExerciseProvider,
     private motivationProvider: MotivationProvider) {
     platform.ready().then(() => {
@@ -25,8 +27,9 @@ export class MyApp {
       statusBar.styleDefault();
       splashScreen.hide();
 
-      this.exerciseProvider.checkForUpdates();
       this.motivationProvider.checkForUpdates();
+      this.exerciseProvider.checkForUpdates();
+      this.theory.checkForUpdates();
     });
   }
 }

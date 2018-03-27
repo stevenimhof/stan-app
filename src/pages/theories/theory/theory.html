@@ -1,0 +1,19 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{ theory.title.rendered }}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div [innerHtml]=theory.content.rendered></div>
+  <hr>
+  <iframe *ngIf="hasInternetConnectivity && videoSrc" [src]="videoSrc" frameborder="0" allowfullscreen="true"></iframe>
+    <ion-card *ngIf="!hasInternetConnectivity">
+        <ion-card-content>
+            <ion-icon name="alert"></ion-icon> No Internet connection. Please check your connection to see an addtional video.
+        </ion-card-content>
+      </ion-card>
+</ion-content>

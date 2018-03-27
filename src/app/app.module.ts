@@ -7,8 +7,8 @@ import { Config } from './app.config';
 import { HomePage } from '../pages/home/home';
 import { ExercisesPage } from "../pages/exercises/exercises/exercises";
 import { ExercisePage } from "../pages/exercises/exercise/exercise";
-import { TheoriesPage } from "../pages/theories/theories";
-import { TheoryPage } from "../pages/theory/theory";
+import { TheoriesPage } from "../pages/theories/theories/theories";
+import { TheoryPage } from "../pages/theories/theory/theory";
 import { InfoPage } from "../pages/info/info";
 import { TabsPage } from '../pages/tabs/tabs';
 import { SettingsPage } from "../pages/settings/settings";
@@ -25,6 +25,7 @@ import { Network } from '@ionic-native/network';
 
 import { ExerciseProvider } from '../providers/exercise/exercise';
 import { MotivationProvider } from '../providers/motivation/motivation';
+import { TheoryProvider } from '../providers/theory/theory';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { MotivationProvider } from '../providers/motivation/motivation';
     ExerciseProvider,
     MotivationProvider,
     Config,
-    Network
+    Network,
+    TheoryProvider
   ]
 })
 export class AppModule {

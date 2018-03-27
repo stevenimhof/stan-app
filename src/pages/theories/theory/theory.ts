@@ -4,21 +4,20 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Network } from '@ionic-native/network';
 
 @Component({
-  selector: 'page-exercise',
-  templateUrl: 'exercise.html',
+  selector: 'page-theory',
+  templateUrl: 'theory.html',
 })
-export class ExercisePage {
-  exercise: any;
+export class TheoryPage {
+  theory: any;
   videoSrc = null;
   hasInternetConnectivity = navigator.onLine;
 
-  constructor(
-  	public navCtrl: NavController,
+  constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private sanitizer: DomSanitizer,
     private network: Network) {
 
-    this.exercise = navParams.get('exercise');
+    this.theory = navParams.get('theory');
     this.watchInternetConnectivity();
     this.setVideoUrl();
   }
@@ -34,10 +33,9 @@ export class ExercisePage {
   }
 
   private setVideoUrl() {
-    if (this.exercise.acf.video_url) {
-      const url = this.exercise.acf.video_url;
+    if (this.theory.acf.video_url) {
+      const url = this.theory.acf.video_url;
       this.videoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
   }
-
 }

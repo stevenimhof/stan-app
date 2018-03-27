@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Theorie</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <button ion-item *ngFor="let theory of theories" (click)="loadTheory(theory)">
+      {{ theory.title.rendered }}
+    </button>  
+  </ion-list>
+</ion-content>
