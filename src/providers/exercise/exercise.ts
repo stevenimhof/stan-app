@@ -63,7 +63,8 @@ export class ExerciseProvider {
 
   public getCategories() {
     return this.getExercisesStorage().then(localExercises => {
-      return (localExercises && localExercises['categories']) ? localExercises['categories'] : [];
+      const result = (localExercises && localExercises['categories']) ? localExercises['categories'] : [];
+      return result.sort(this.compareCategoriesByOrder);
     });
   }
 
@@ -71,6 +72,14 @@ export class ExerciseProvider {
     return this.getExercisesStorage().then((localExercises) => {
       return (localExercises && localExercises['exercises']) ? localExercises['exercises'] : [];
     });
+  }
+
+  private compareCategoriesByOrder(a,b) {
+    if (parseInt(a.order) < parseInt(b.order))
+      return -1;
+    if (parseInt(a.order) > parseInt(b.order))
+      return 1;
+    return 0;
   }
 
   /**
@@ -88,6 +97,7 @@ export class ExerciseProvider {
         name: el.name,
         parent: el.parent,
         slug: el.slug,
+        isVisible: true,
         exercises: [] // to connect the exercises to the categories
       }
       result.push(obj);
