@@ -9,23 +9,26 @@
 
 <ion-content padding>
   <button ion-button (click)="deleteStorage()">Delete storage</button>
-  <ion-list>
-    <div *ngFor="let category of categories">
-      <ion-item class="item-stable"
-        (click)="toggleCategory(category)"
-        [ngClass]="{active: isCategoryShown(category)}"
-        [style.borderColor]=category.color>
-        <ion-icon [name]="isCategoryShown(category) ? 'arrow-down' : 'arrow-forward'"></ion-icon>
-        &nbsp;
-        {{category.name}}
-      </ion-item>
-      <ion-item class="item-accordion"
-        *ngFor="let exercise of category.exercises"
-        [ngClass]="{'custom-fadeout':!isCategoryShown(category)}">
-        <ion-label no-margin (click)="loadExercise(exercise)">
-          {{exercise.title.rendered}}
-        </ion-label>
-      </ion-item>
+
+  <ion-list *ngIf="this.categories && this.exercises">
+    <div *ngFor="let category of this.categories">
+      <div *ngIf="isCategoryVisible(category)">
+        <ion-item class="item-stable"
+          (click)="toggleCategory(category)"
+          [ngClass]="{active: isCategoryShown(category)}"
+          [style.borderColor]=category.color>
+          <ion-icon [name]="isCategoryShown(category) ? 'arrow-down' : 'arrow-forward'"></ion-icon>
+          &nbsp;
+          {{category.name}}
+        </ion-item>
+        <ion-item class="item-accordion"
+          *ngFor="let exercise of category.exercises"
+          [ngClass]="{'custom-fadeout':!isCategoryShown(category)}">
+          <ion-label no-margin (click)="loadExercise(exercise)">
+            {{exercise.title.rendered}}
+          </ion-label>
+        </ion-item>
+      </div>
     </div>
   </ion-list>
 </ion-content>

@@ -7,14 +7,14 @@
 
 <ion-content class="wrap">
 
-  <ion-list>
+  <ion-list >
     <ion-list-header>
       Push-Nachrichten
     </ion-list-header>
 
-    <ion-item *ngFor="let category of categories; let i = index;">
-      <ion-label>{{category.name}}</ion-label>
-      <ion-toggle [(ngModel)]="categories[i].isVisible" (ngModelChange)="onChange()"></ion-toggle>
+    <ion-item *ngFor="let item of notifications">
+      <ion-label>{{item.name}}</ion-label>
+      <ion-toggle *ngIf="item" [(ngModel)]="item.isActive" (ngModelChange)="onChange()"></ion-toggle>
     </ion-item>
 
   </ion-list>

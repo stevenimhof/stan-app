@@ -26,6 +26,7 @@ import { Network } from '@ionic-native/network';
 import { ExerciseProvider } from '../providers/exercise/exercise';
 import { MotivationProvider } from '../providers/motivation/motivation';
 import { TheoryProvider } from '../providers/theory/theory';
+import { NotificationProvider } from '../providers/notification/notification';
 
 @NgModule({
   declarations: [
@@ -64,12 +65,13 @@ import { TheoryProvider } from '../providers/theory/theory';
   providers: [
     StatusBar,
     SplashScreen,
+    Config,
+    Network,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ExerciseProvider,
     MotivationProvider,
-    Config,
-    Network,
-    TheoryProvider
+    TheoryProvider,
+    NotificationProvider
   ]
 })
 export class AppModule {

@@ -4,6 +4,7 @@ import { Events } from 'ionic-angular';
 
 import { ExercisePage } from '../exercise/exercise';
 import { ExerciseProvider } from '../../../providers/exercise/exercise';
+import { NotificationProvider } from '../../../providers/notification/notification';
 
 @Component({
   selector: 'page-exercises',
@@ -12,13 +13,20 @@ import { ExerciseProvider } from '../../../providers/exercise/exercise';
 export class ExercisesPage {
   shownCategory = null;
   categories = [];
-  exercises;
+  exercises = [];
+  notifications = [];
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private exerciseProvider: ExerciseProvider,
+    private notificationProvider:NotificationProvider,
     private events: Events) {
+
+      this.categories = this.exerciseProvider.getCategories();
+      this.exercises = this.exerciseProvider.getExercises();
+      this.notifications = this.notificationProvider.getSettings();
+      this.prepareData();
 
     this.listenForExercisesDidLoad();
     if (!this.categories.length || !this.exercises.length) {
@@ -28,6 +36,11 @@ export class ExercisesPage {
 
   public deleteStorage() {
     this.exerciseProvider.deleteExercises();
+  }
+
+  public isCategoryVisible(category) {
+    const result = this.notifications.find( item => item.id === category.id );
+    return result.isActive;
   }
 
   public toggleCategory(category) {
@@ -60,17 +73,22 @@ export class ExercisesPage {
   }
 
   private getData() {
-    this.exerciseProvider.getCategories().then(result => {
-      this.categories = result;
+    /*this.exerciseProvider.getCategories().then(result => {
+      //this.categories = result;
       this.exerciseProvider.getExercises().then(result => {
-        this.exercises = result;
+        //this.exercises = result;
 
         if (this.categories.length && this.exercises.length) {
           this.prepareData();
         }
       });
 
-    });
+    });*/
+    this.categories = this.exerciseProvider.getCategories();
+    this.exercises = this.exerciseProvider.getExercises();
+    if (this.categories.length && this.exercises.length) {
+      this.prepareData();
+    }
   }
 
   private prepareData() {

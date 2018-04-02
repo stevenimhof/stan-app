@@ -10,10 +10,23 @@ import { Events } from 'ionic-angular';
 
 @Injectable()
 export class ExerciseProvider {
+  categories = [];
+  exercises = [];
+
   constructor(public http: HttpClient,
     private config: Config,
     private storage: Storage,
     private events: Events) {
+  }
+
+  public saveExercisesAndCategories() {
+    return this.getExercisesStorage().then( () => {
+      return this.storage.set('exercises', {
+        "exercises": this.exercises,
+        "categories": this.categories,
+        "evaluations": []
+      });
+    });
   }
 
   public getCategoriesFromWordpress() {
@@ -43,17 +56,19 @@ export class ExerciseProvider {
    */
   public checkForUpdates() {
     this.getExercisesStorage().then(localExercises => {
-      this.getCategoriesFromWordpress().subscribe(categories => {
+      this.getCategoriesFromWordpress().subscribe(unsortedCategories => {
+        const categories = unsortedCategories.sort(this.compareCategoriesByOrder);
         this.getExercisesFromWordpress().subscribe(exercises => {
           if (!this.compareExercises(localExercises, exercises, categories)) {
-            this.storage.set('exercises', {
-              "exercises": exercises,
-              "categories": categories,
-              "evaluations": []
-            }).then(() => {
+            this.categories = categories;
+            this.exercises = exercises;
+
+            this.saveExercisesAndCategories().then(() => {
               this.emitExercisesDidLoad();
             });
           } else {
+            this.categories = localExercises['categories'];
+            this.exercises = localExercises['exercises'];
             this.emitExercisesDidLoad();
           }
         });
@@ -62,16 +77,11 @@ export class ExerciseProvider {
   }
 
   public getCategories() {
-    return this.getExercisesStorage().then(localExercises => {
-      const result = (localExercises && localExercises['categories']) ? localExercises['categories'] : [];
-      return result.sort(this.compareCategoriesByOrder);
-    });
+    return this.categories;
   }
 
   public getExercises() {
-    return this.getExercisesStorage().then((localExercises) => {
-      return (localExercises && localExercises['exercises']) ? localExercises['exercises'] : [];
-    });
+    return this.exercises;
   }
 
   private compareCategoriesByOrder(a,b) {
@@ -97,7 +107,6 @@ export class ExerciseProvider {
         name: el.name,
         parent: el.parent,
         slug: el.slug,
-        isVisible: true,
         exercises: [] // to connect the exercises to the categories
       }
       result.push(obj);
@@ -117,7 +126,7 @@ export class ExerciseProvider {
     });
   }
 
-  private emitExercisesDidLoad() {
+  public emitExercisesDidLoad() {
     this.events.publish('exercises:loaded', null, null);
   }
 
