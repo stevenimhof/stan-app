@@ -30,7 +30,7 @@ export class ExerciseProvider {
   }
 
   public getCategoriesFromWordpress() {
-    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/exercise_category')
+    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/exercise_category?per_page=100')
       .map(result => {
         return this.transformCategories(result);
       })
@@ -38,7 +38,7 @@ export class ExerciseProvider {
   }
 
   public getExercisesFromWordpress() {
-    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/exercise')
+    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/exercise?per_page=100')
       .map(result => {
         return result;
       })
@@ -84,6 +84,10 @@ export class ExerciseProvider {
     return this.exercises;
   }
 
+  public emitExercisesDidLoad() {
+    this.events.publish('exercises:loaded', null, null);
+  }
+
   private compareCategoriesByOrder(a,b) {
     if (parseInt(a.order) < parseInt(b.order))
       return -1;
@@ -124,10 +128,6 @@ export class ExerciseProvider {
     return this.storage.ready().then(() => {
       return this.storage.get('exercises')
     });
-  }
-
-  public emitExercisesDidLoad() {
-    this.events.publish('exercises:loaded', null, null);
   }
 
 }

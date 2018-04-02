@@ -10,7 +10,7 @@
 <ion-content padding>
   <button ion-button (click)="deleteStorage()">Delete storage</button>
 
-  <ion-list *ngIf="this.categories && this.exercises">
+  <ion-list>
     <div *ngFor="let category of this.categories">
       <div *ngIf="isCategoryVisible(category)">
         <ion-item class="item-stable"

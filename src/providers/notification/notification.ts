@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
-import { Config } from '../../app/app.config';
 import { Storage } from '@ionic/storage';
 import { Events } from 'ionic-angular';
 
@@ -24,13 +22,21 @@ export class NotificationProvider {
   public loadSettings() {
     this.getSettingsStorage().then(settings => {
       this.settings = settings ? settings : [];
+    }).then(() => {
+      this.emitSettingsDidChange();
     });
   }
 
+  public emitSettingsDidChange() {
+    this.events.publish('notificationSettings:change', null, null);
+  }
+
   public saveSettings(settings) {
-    console.log(settings);
+    this.settings = settings;
     return this.getSettingsStorage().then( () => {
       return this.storage.set('notificationSettings', settings );
+    }).then(() => {
+      this.emitSettingsDidChange();
     });
   }
 

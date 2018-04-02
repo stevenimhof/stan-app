@@ -9,7 +9,7 @@
 
   <ion-list >
     <ion-list-header>
-      Push-Nachrichten
+      Push-Mitteilungen
     </ion-list-header>
 
     <ion-item *ngFor="let item of notifications">
@@ -19,5 +19,10 @@
 
   </ion-list>
 
-  <button ion-button (click)="loadAbout()">Impressum</button>
+  <ion-list>
+    <ion-item (click)="loadAbout()">
+        Impressum
+    </ion-item>
+  </ion-list>
+
 </ion-content>

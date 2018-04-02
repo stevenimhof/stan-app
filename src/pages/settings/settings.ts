@@ -20,13 +20,47 @@ export class SettingsPage {
     private notificationProvider: NotificationProvider,
     private events: Events) {
 
-      this.setCategories();
-      this.setNotifications();
-      this.prepareNotifications();
+      this.listenForNotificationSettingsDidChange();
+      if (!this.categories.length || !this.notifications.length) {
+        this.getData();
+      }
+  }
+
+  public getData() {
+    this.setCategories();
+    this.setNotifications();
+    this.prepareNotifications();
+  }
+
+  /**
+   * Prepare the notification list based on the data from the exercise categories
+   */
+  public prepareNotifications() {
+    if (!this.categories.length) return;
+
+    // do we have any notifications? if that's not the case we need to
+    // create a list from the exercise categories
+    if (!this.notifications.length) {
+      this.copyAllNotificationsFromCategories();
+      console.log('copy from not', this.notifications);
+      this.notificationProvider.saveSettings(this.notifications);
+    } else {
+      // do we have the same numer of exercise categories and items in notification settings?
+      // if that's not the case we need to update our list
+      if (this.categories.length !== this.notifications.length) {
+        this.updateSettings();
+        this.notificationProvider.saveSettings(this.notifications);
+      }
+    }
+    return this.notifications;
   }
 
   public onChange() {
     this.notificationProvider.saveSettings(this.notifications);
+  }
+
+  public loadAbout() {
+    this.navCtrl.push(AboutPage);
   }
 
   private setCategories() {
@@ -37,35 +71,35 @@ export class SettingsPage {
     this.notifications = this.notificationProvider.getSettings();
   }
 
-  private getNotificationSettings() {
-    this.notifications = this.notificationProvider.getSettings();
-  }
-
-  public prepareNotifications() {
-    if (!this.categories.length) return;
-
-    if (!this.notifications.length) {
-      this.copyAllNotificationsFromCategories();
-      return this.notifications;
-    } else {
-      // check for update
-      if (this.categories.length === this.notifications.length) {
-        // no updates
-        return this.notifications;
-      } else {
-        //updatecategories
-      }
-    }
-  }
-
-  private copyAllNotificationsFromCategories() {
-    this.categories.forEach(cat => {
-      this.notifications.push({ id: cat.id, name: cat.name, isActive: true });
+  private listenForNotificationSettingsDidChange() {
+    this.events.subscribe('notificationSettings:change', () => {
+      this.getData();
     });
   }
 
-  loadAbout() {
-    this.navCtrl.push(AboutPage);
+  /**
+   * Update the list of notification settings
+   * 
+   * Take the current notification settings and add any new items
+   * from the exercise category list. Don't change the 'isActive' property 
+   * of the current notification settings
+   */
+  private updateSettings() {
+    const temp: any = this.notifications;
+    this.copyAllNotificationsFromCategories();
+    this.notifications.forEach( item => {
+      const found = temp.find( el => el.id === item.id );
+      if (found) {
+        item.isActive = found.isActive;
+      }
+    });
+  }
+
+  private copyAllNotificationsFromCategories() {
+    this.notifications = [];
+    this.categories.forEach(cat => {
+      this.notifications.push({ id: cat.id, name: cat.name, isActive: true });
+    });
   }
 
 }

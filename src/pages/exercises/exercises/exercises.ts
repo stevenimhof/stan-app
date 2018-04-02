@@ -15,6 +15,8 @@ export class ExercisesPage {
   categories = [];
   exercises = [];
   notifications = [];
+  haveExercisesLoaded: boolean;
+  haveNotificationSettingsLoaded: boolean;
 
   constructor(
     public navCtrl: NavController,
@@ -22,13 +24,15 @@ export class ExercisesPage {
     private exerciseProvider: ExerciseProvider,
     private notificationProvider:NotificationProvider,
     private events: Events) {
+      this.init();
+  }
 
-      this.categories = this.exerciseProvider.getCategories();
-      this.exercises = this.exerciseProvider.getExercises();
-      this.notifications = this.notificationProvider.getSettings();
-      this.prepareData();
+  public init() {
+    this.haveExercisesLoaded = false;
+    this.haveNotificationSettingsLoaded = false;
 
     this.listenForExercisesDidLoad();
+    this.listenForNotificationSettingsDidChange();
     if (!this.categories.length || !this.exercises.length) {
       this.getData();
     }
@@ -39,8 +43,12 @@ export class ExercisesPage {
   }
 
   public isCategoryVisible(category) {
+    // if we don't have any notification settings (no saved )
+    console.log('get res', this.notifications);
+    if (!this.notifications.length) return true;
+
     const result = this.notifications.find( item => item.id === category.id );
-    return result.isActive;
+    return result !== undefined ? result.isActive : false;
   }
 
   public toggleCategory(category) {
@@ -63,8 +71,12 @@ export class ExercisesPage {
 
   private listenForExercisesDidLoad() {
     this.events.subscribe('exercises:loaded', () => {
-      this.getData();
+      this.haveExercisesLoaded = true;
       this.unlistenForExercisesDidLoad();
+
+      if (this.haveExercisesLoaded && this.haveNotificationSettingsLoaded) {
+        this.getData();
+      }
     });
   }
 
@@ -72,23 +84,17 @@ export class ExercisesPage {
     this.events.unsubscribe('exercises:loaded', null);
   }
 
+  private listenForNotificationSettingsDidChange() {
+    this.haveNotificationSettingsLoaded = true;
+    this.events.subscribe('notificationSettings:change', () => {
+      this.notifications = this.notificationProvider.getSettings();
+    });
+  }
+
   private getData() {
-    /*this.exerciseProvider.getCategories().then(result => {
-      //this.categories = result;
-      this.exerciseProvider.getExercises().then(result => {
-        //this.exercises = result;
-
-        if (this.categories.length && this.exercises.length) {
-          this.prepareData();
-        }
-      });
-
-    });*/
     this.categories = this.exerciseProvider.getCategories();
     this.exercises = this.exerciseProvider.getExercises();
-    if (this.categories.length && this.exercises.length) {
-      this.prepareData();
-    }
+    this.prepareData();
   }
 
   private prepareData() {
