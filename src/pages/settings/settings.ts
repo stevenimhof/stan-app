@@ -42,7 +42,6 @@ export class SettingsPage {
     // create a list from the exercise categories
     if (!this.notifications.length) {
       this.copyAllNotificationsFromCategories();
-      console.log('copy from not', this.notifications);
       this.notificationProvider.saveSettings(this.notifications);
     } else {
       // do we have the same numer of exercise categories and items in notification settings?
