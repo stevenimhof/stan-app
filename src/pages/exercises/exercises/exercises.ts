@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-import { Events } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 
 import { ExercisePage } from '../exercise/exercise';
 import { ExerciseProvider } from '../../../providers/exercise/exercise';
