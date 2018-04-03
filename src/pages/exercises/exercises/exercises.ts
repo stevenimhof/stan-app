@@ -43,8 +43,7 @@ export class ExercisesPage {
   }
 
   public isCategoryVisible(category) {
-    // if we don't have any notification settings (no saved )
-    console.log('get res', this.notifications);
+    // if we don't have any notification settings we want to show all by default
     if (!this.notifications.length) return true;
 
     const result = this.notifications.find( item => item.id === category.id );
