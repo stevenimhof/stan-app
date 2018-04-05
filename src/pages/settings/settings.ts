@@ -46,6 +46,7 @@ export class SettingsPage {
     } else {
       // do we have the same numer of exercise categories and items in notification settings?
       // if that's not the case we need to update our list
+      // TODO: maybe we change a category. it's not always a different number
       if (this.categories.length !== this.notifications.length) {
         this.updateSettings();
         this.notificationProvider.saveSettings(this.notifications);
