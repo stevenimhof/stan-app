@@ -1,3 +1,43 @@
 page-home {
+    ion-footer.footer-md:before {
+        background:none;
+    }
 
+    #dailyMotivation {
+        margin: 20px;
+        font-style: italic;
+        border: 3px solid color($colors, primary);
+        border-top-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+
+        &:before,
+        &:after {
+            display: block;
+            color: #0785bf;
+            font-size: 5rem;
+            position: absolute;
+            background-color: white;
+            height: 30px;
+            width: 30px;
+            line-height: 1;
+            font-family: "Helvetica Neue", sans-serif;
+        }
+        &:before {
+            content: '\201C';
+            top: 7px;
+            left: 11px;
+        }
+
+        &:after {
+            content: '\201D';
+            bottom: 7px;
+            right: 8px;
+            text-align: center;
+        }
+
+        .inner {
+            margin: 20px;
+            position: relative;
+        }
+    }
 }

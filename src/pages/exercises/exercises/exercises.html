@@ -7,17 +7,16 @@
 </ion-header>
 
 
-<ion-content padding>
-  <button ion-button (click)="deleteStorage()">Delete storage</button>
-
+<ion-content>
   <ion-list>
     <div *ngFor="let category of this.categories">
       <div *ngIf="isCategoryVisible(category)">
         <ion-item class="item-stable"
           (click)="toggleCategory(category)"
-          [ngClass]="{active: isCategoryShown(category)}"
-          [style.borderColor]=category.color>
+          [ngClass]="{active: isCategoryShown(category)}">
           <ion-icon [name]="isCategoryShown(category) ? 'arrow-down' : 'arrow-forward'"></ion-icon>
+          
+          <div item-end class="categoryColor" [style.backgroundColor]=category.color></div>
           &nbsp;
           {{category.name}}
         </ion-item>
