@@ -6,6 +6,12 @@ page-exercises {
 
       .item-inner {
         padding-left: 16px;
+
+        .categoryColor {
+          height: 15px;
+          width: 15px;
+          border-radius: 50%;
+        }
       }
 
       &.item-accordion {

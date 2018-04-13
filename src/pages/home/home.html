@@ -15,12 +15,11 @@
     Bachelorarbeit von Steven Imhof und Alexander Nakamura
   </p>
 </ion-content>
-
 <ion-footer>
-  <ion-badge *ngIf="dailyMotivation">
-    <h3>täglicher Motivationsspruch:</h3>
-    <p>{{dailyMotivation.content.rendered}}</p>
-  </ion-badge>
-  <button ion-button (click)="changeMotivation()">setOldDate</button>
+  <div id="dailyMotivation" *ngIf="dailyMotivation">
+    <div class="inner">
+      {{ dailyMotivation.content.rendered | stripHtml }}
+    </div>
+  </div>
 </ion-footer>
 

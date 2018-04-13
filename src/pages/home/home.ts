@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, Events } from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
 import { MotivationProvider } from "../../providers/motivation/motivation";
+import { StripHtmlPipe } from "../../pipes/strip-html/strip-html";
 
 @Component({
   selector: 'page-home',
