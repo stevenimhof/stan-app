@@ -32,14 +32,21 @@ export class WpPageProvider {
   }
 
   public getInfoPage() {
-    const page = this.wpPages.filter(page => {
-      return page.id === this.config.WordpressInfoPageID;
-    });
+    return this.getPageByID(this.config.wordpressInfoPageID);
+  }
 
+  public getAboutPage() {
+    return this.getPageByID(this.config.wordpressAboutPageID);
+  }
+
+  private getPageByID(ID) {
+    const page = this.wpPages.filter(page => {
+      return page.id === ID;
+    });
     return page.length ? page[0] : null;
   }
 
-    /**
+  /**
    * Checks for updates by comparing data from server and from local storage
    * If there is a new version on the server, it will be saved in the local storage.
    * In addition, it emits an event that the data is now available via the storage.
