@@ -4,8 +4,8 @@ page-home {
     }
 
     #dailyMotivation {
+        position: relative;
         margin: 20px;
-        font-style: italic;
         border: 3px solid color($colors, primary);
         border-top-right-radius: 10px;
         border-bottom-left-radius: 10px;
@@ -14,30 +14,36 @@ page-home {
         &:after {
             display: block;
             color: #0785bf;
-            font-size: 5rem;
+            font-size: 6rem;
             position: absolute;
             background-color: white;
-            height: 30px;
+            height: 25px;
             width: 30px;
             line-height: 1;
-            font-family: "Helvetica Neue", sans-serif;
+            font-family: "Catamaran", sans-serif;
+            text-align: center;
         }
         &:before {
             content: '\201C';
-            top: 7px;
-            left: 11px;
+            top: -13px;
+            left: -14px;
+        
         }
 
         &:after {
             content: '\201D';
-            bottom: 7px;
-            right: 8px;
-            text-align: center;
+            bottom: -15px;
+            right: -15px;
+            padding-top: 2px;
         }
 
         .inner {
             margin: 20px;
             position: relative;
+            font-style: italic;
+            p {
+                margin:0;
+            }
         }
     }
 }

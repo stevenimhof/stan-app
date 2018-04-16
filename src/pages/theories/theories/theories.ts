@@ -29,9 +29,7 @@ export class TheoriesPage {
   }
 
   private getData() {
-    this.theoryProvider.getTheories().then(result => {
-      this.theories = result;
-    });
+    this.theories = this.theoryProvider.getTheories();
   }
 
   private listenForTheoriessDidLoad() {

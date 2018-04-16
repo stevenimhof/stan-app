@@ -33,8 +33,8 @@ export class TheoryPage {
   }
 
   private setVideoUrl() {
-    if (this.theory.acf.video_url) {
-      const url = this.theory.acf.video_url;
+    if (this.theory.acf.youtube_video_id) {
+      const url = 'https://www.youtube.com/embed/' + this.theory.acf.youtube_video_id;
       this.videoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
   }

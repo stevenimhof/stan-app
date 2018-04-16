@@ -86,6 +86,12 @@ $colors: (
 
 @import "roboto";
 @import "noto-sans";
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 400;
+  src:url('../assets/fonts/Catamaran.woff2') format('woff2')
+}
 
 
 // $tabs-ios-border: $hairlines-width solid color($colors, secondary);

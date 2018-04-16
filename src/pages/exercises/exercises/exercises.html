@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-list>
-    <div *ngFor="let category of this.categories">
+    <div *ngFor="let category of categories">
       <div *ngIf="isCategoryVisible(category)">
         <ion-item class="item-stable"
           (click)="toggleCategory(category)"

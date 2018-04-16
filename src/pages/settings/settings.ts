@@ -27,9 +27,13 @@ export class SettingsPage {
   }
 
   public getData() {
-    this.setCategories();
-    this.setNotifications();
-    this.prepareNotifications();
+    if (!this.categories.length) {
+      this.setCategories();
+    }
+    if (!this.notifications.length) {
+      this.setNotifications();
+      this.prepareNotifications();
+    }
   }
 
   /**
@@ -44,10 +48,9 @@ export class SettingsPage {
       this.copyAllNotificationsFromCategories();
       this.notificationProvider.saveSettings(this.notifications);
     } else {
-      // do we have the same numer of exercise categories and items in notification settings?
-      // if that's not the case we need to update our list
-      // TODO: maybe we change a category. it's not always a different number
-      if (this.categories.length !== this.notifications.length) {
+      // compare exercise categories and items in notification settings
+      // if there's a change we need to update our list
+      if (JSON.stringify(this.categories) !== JSON.stringify(this.notifications)) {
         this.updateSettings();
         this.notificationProvider.saveSettings(this.notifications);
       }
@@ -75,6 +78,10 @@ export class SettingsPage {
     this.events.subscribe('notificationSettings:change', () => {
       this.getData();
     });
+  }
+
+  private unlistenForNotificationSettingsDidChange() {
+    this.events.unsubscribe('notificationSettings:change', null);
   }
 
   /**

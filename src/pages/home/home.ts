@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, Events } from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
 import { MotivationProvider } from "../../providers/motivation/motivation";
-import { StripHtmlPipe } from "../../pipes/strip-html/strip-html";
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-home',
@@ -13,13 +13,19 @@ export class HomePage {
 
   constructor(public navCtrl: NavController,
     private motivationProvider: MotivationProvider,
-    private events: Events) {
+    private events: Events,
+    private storage: Storage) {
     this.listenForMotivationsDidLoad();
+    
   }
 
   // only for testing purposes
-  public changeMotivation() {
-    this.motivationProvider.changeMotivation();
+  public deleteStorage() {
+    this.storage.remove('exercises');
+    this.storage.remove('motivations');
+    this.storage.remove('notificationSettings');
+    this.storage.remove('theories');
+    this.storage.remove('wp_pages');
   }
 
   public loadSettings() {
