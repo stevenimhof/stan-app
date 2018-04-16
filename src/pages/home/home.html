@@ -20,8 +20,7 @@
 </ion-content>
 <ion-footer>
   <div id="dailyMotivation" *ngIf="dailyMotivation">
-    <div class="inner">
-      {{ dailyMotivation.content.rendered | stripHtml }}
+    <div class="inner" [innerHTML]="dailyMotivation.content.rendered">
     </div>
   </div>
 </ion-footer>

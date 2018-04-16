@@ -83,8 +83,8 @@ export class ExercisesPage {
   }
 
   private listenForNotificationSettingsDidChange() {
-    this.haveNotificationSettingsLoaded = true;
     this.events.subscribe('notificationSettings:change', () => {
+      this.haveNotificationSettingsLoaded = true;
       this.notifications = this.notificationProvider.getSettings();
     });
   }

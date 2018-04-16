@@ -27,9 +27,13 @@ export class SettingsPage {
   }
 
   public getData() {
-    this.setCategories();
-    this.setNotifications();
-    this.prepareNotifications();
+    if (!this.categories.length) {
+      this.setCategories();
+    }
+    if (!this.notifications.length) {
+      this.setNotifications();
+      this.prepareNotifications();
+    }
   }
 
   /**
@@ -73,7 +77,6 @@ export class SettingsPage {
   private listenForNotificationSettingsDidChange() {
     this.events.subscribe('notificationSettings:change', () => {
       this.getData();
-      this.unlistenForNotificationSettingsDidChange();
     });
   }
 
