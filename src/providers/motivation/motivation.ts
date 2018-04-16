@@ -30,15 +30,16 @@ export class MotivationProvider {
   }
 
   public getMotivationsFromWordpress() {
-    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/motivation')
+    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/motivation?per_page=100')
       .map(result => {
         return result;
       })
       .catch(error => Observable.throw("Error while trying to get motivations-data from server"));
   }
 
-  public getDailyMotivation() {
+  public getDailyMotivation() {    
     return this.getMotivationStorage().then(localMotivations => {
+      
       const possibleDailyMotivations = this.getPossibleDailyMotivations(localMotivations);
       const dailyMotivation = this.getRandomMotivation(possibleDailyMotivations);
 

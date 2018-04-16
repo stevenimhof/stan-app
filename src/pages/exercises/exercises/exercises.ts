@@ -102,6 +102,13 @@ export class ExercisesPage {
           cat.exercises.push(exercise);
         }
       });
+      cat.exercises = cat.exercises.sort(this.compareExercisesByTitel);
     });
+  }
+
+  private compareExercisesByTitel(a,b) {
+    if(a.title.rendered < b.title.rendered) return -1;
+    if(a.title.rendered > b.title.rendered) return 1;
+    return 0;
   }
 }

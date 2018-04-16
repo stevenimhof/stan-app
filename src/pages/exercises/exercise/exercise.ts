@@ -34,8 +34,8 @@ export class ExercisePage {
   }
 
   private setVideoUrl() {
-    if (this.exercise.acf.video_url) {
-      const url = this.exercise.acf.video_url;
+    if (this.exercise.acf.youtube_video_id) {
+      const url = 'https://www.youtube.com/embed/' + this.exercise.acf.youtube_video_id;
       this.videoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
   }

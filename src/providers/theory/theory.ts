@@ -7,6 +7,7 @@ import { Events } from 'ionic-angular';
 
 @Injectable()
 export class TheoryProvider {
+  theories = [];
 
   constructor(public http: HttpClient,
     private config: Config,
@@ -21,14 +22,17 @@ export class TheoryProvider {
    */
   public checkForUpdates() {
     this.getTheoriesStorage().then(localThoeries => {
-      this.getTheoriesFromWordpress().subscribe(theories => {
-        if (!this.compareExercises(localThoeries, theories)) {
+      this.getTheoriesFromWordpress().subscribe(unsortedTheories => {
+        const theories = unsortedTheories.sort(this.compareTheoriesByOrder);
+        if (!this.compareTheories(localThoeries, theories)) {
           this.storage.set('theories', {
             "theories": theories
           }).then(() => {
+            this.theories = theories;
             this.emitTheoriesDidLoad();
           });
         } else {
+          this.theories = localThoeries['theories'];
           this.emitTheoriesDidLoad();
         }
       });
@@ -36,20 +40,18 @@ export class TheoryProvider {
   }
 
   public getTheories() {
-    return this.getTheoriesStorage().then(theory => {
-      return (theory && theory['theories']) ? theory['theories'] : [];
-    });
+    return this.theories;
   }
 
   public getTheoriesFromWordpress() {
-    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/theory')
+    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/theory?per_page=100')
       .map(result => {
         return result;
       })
       .catch(error => Observable.throw("Error while trying to get theory-data from server"));
   }
 
-  private compareExercises(localTheories, theoriesFromRest) {
+  private compareTheories(localTheories, theoriesFromRest) {
     return localTheories && JSON.stringify(localTheories['theories']) == JSON.stringify(theoriesFromRest);
   }
 
@@ -61,6 +63,12 @@ export class TheoryProvider {
 
   private emitTheoriesDidLoad() {
     this.events.publish('theories:loaded', null, null);
+  }
+
+  private compareTheoriesByOrder(a,b) {
+    if (parseInt(a.menu_order) < parseInt(b.menu_order)) return -1;
+    if (parseInt(a.menu_order) > parseInt(b.menu_order)) return 1;
+    return 0;
   }
 
 }
