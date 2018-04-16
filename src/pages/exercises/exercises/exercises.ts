@@ -44,7 +44,7 @@ export class ExercisesPage {
   public isCategoryVisible(category) {
     // if we don't have any notification settings we want to show all by default
     if (!this.notifications.length) return true;
-
+    
     const result = this.notifications.find( item => item.id === category.id );
     return result !== undefined ? result.isActive : false;
   }
@@ -71,10 +71,7 @@ export class ExercisesPage {
     this.events.subscribe('exercises:loaded', () => {
       this.haveExercisesLoaded = true;
       this.unlistenForExercisesDidLoad();
-
-      if (this.haveExercisesLoaded && this.haveNotificationSettingsLoaded) {
-        this.getData();
-      }
+      this.getData();
     });
   }
 
@@ -92,6 +89,7 @@ export class ExercisesPage {
   private getData() {
     this.categories = this.exerciseProvider.getCategories();
     this.exercises = this.exerciseProvider.getExercises();
+    this.notifications = this.notificationProvider.getSettings();
     this.prepareData();
   }
 
