@@ -30,7 +30,7 @@ export class ExerciseProvider {
   }
 
   public getCategoriesFromWordpress() {
-    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/exercise_category?per_page=100')
+    return this.http.get(this.config.WP_API_URL + '/wp/v2/exercise_category?' + this.config.WP_MAX_POSTS)
       .map(result => {
         return this.transformCategories(result);
       })
@@ -38,7 +38,7 @@ export class ExerciseProvider {
   }
 
   public getExercisesFromWordpress() {
-    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/exercise?per_page=100')
+    return this.http.get(this.config.WP_API_URL + '/wp/v2/exercise?' + this.config.WP_MAX_POSTS)
       .map(result => {
         return result;
       })

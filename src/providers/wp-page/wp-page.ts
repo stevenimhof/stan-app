@@ -20,7 +20,7 @@ export class WpPageProvider {
   }
 
   public getPagesFromWordpress() {
-    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/pages?per_page=100')
+    return this.http.get(this.config.WP_API_URL + '/wp/v2/pages?' + this.config.WP_MAX_POSTS)
       .map(result => {
         return result;
       })
@@ -32,11 +32,11 @@ export class WpPageProvider {
   }
 
   public getInfoPage() {
-    return this.getPageByID(this.config.wordpressInfoPageID);
+    return this.getPageByID(this.config.WP_INFO_PAGE_ID);
   }
 
   public getAboutPage() {
-    return this.getPageByID(this.config.wordpressAboutPageID);
+    return this.getPageByID(this.config.WP_ABOUT_PAGE_ID);
   }
 
   private getPageByID(ID) {

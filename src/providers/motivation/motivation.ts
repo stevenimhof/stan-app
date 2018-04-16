@@ -30,7 +30,7 @@ export class MotivationProvider {
   }
 
   public getMotivationsFromWordpress() {
-    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/motivation?per_page=100')
+    return this.http.get(this.config.WP_API_URL + '/wp/v2/motivation?' + this.config.WP_MAX_POSTS)
       .map(result => {
         return result;
       })

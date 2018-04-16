@@ -44,7 +44,7 @@ export class TheoryProvider {
   }
 
   public getTheoriesFromWordpress() {
-    return this.http.get(this.config.wordpressApiUrl + '/wp/v2/theory?per_page=100')
+    return this.http.get(this.config.WP_API_URL + '/wp/v2/theory?' + this.config.WP_MAX_POSTS)
       .map(result => {
         return result;
       })
