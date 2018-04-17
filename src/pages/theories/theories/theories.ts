@@ -9,7 +9,7 @@ import { TheoryProvider } from '../../../providers/theory/theory';
   templateUrl: 'theories.html',
 })
 export class TheoriesPage {
-  theories = [];
+  theories;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -17,9 +17,7 @@ export class TheoriesPage {
     private theoryProvider: TheoryProvider) {
 
     this.listenForTheoriessDidLoad();
-    if (!this.theories.length) {
-      this.getData();
-    }
+    this.getTheories();
   }
 
   public loadTheory(theory) {
@@ -28,13 +26,13 @@ export class TheoriesPage {
     });
   }
 
-  private getData() {
+  private getTheories() {
     this.theories = this.theoryProvider.getTheories();
   }
 
   private listenForTheoriessDidLoad() {
     this.events.subscribe('theories:loaded', () => {
-      this.getData();
+      this.getTheories();
       this.unlistenForTheoriessDidLoad();
     });
   }

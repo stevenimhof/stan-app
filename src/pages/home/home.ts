@@ -19,15 +19,6 @@ export class HomePage {
     
   }
 
-  // only for testing purposes
-  public deleteStorage() {
-    this.storage.remove('exercises');
-    this.storage.remove('motivations');
-    this.storage.remove('notificationSettings');
-    this.storage.remove('theories');
-    this.storage.remove('wp_pages');
-  }
-
   public loadSettings() {
     this.navCtrl.push(SettingsPage);
   }
