@@ -29,6 +29,8 @@ export class TheoryProvider {
         .subscribe(unsortedTheories => {
           const theories = unsortedTheories.sort(this.compareTheoriesByOrder);
           if (!this.compareTheories(localTheories, theories)) {
+            this.theories = theories;
+            this.emitTheoriesDidChange();
             this.saveTheories(theories);
           }
         }, error => { });
@@ -39,7 +41,7 @@ export class TheoryProvider {
     return this.theories;
   }
 
-  public getTheoriesFromWordpress() {
+  private getTheoriesFromWordpress() {
     return this.http.get(this.config.WP_API_URL + '/wp/v2/theory?' + this.config.WP_MAX_POSTS)
       .map(result => {
         return result;
@@ -48,11 +50,10 @@ export class TheoryProvider {
   }
 
   private saveTheories(theories) {
-    this.storage.set('theories', {
-      "theories": theories
-    }).then(() => {
-      this.theories = theories;
-      this.emitTheoriesDidLoad();
+    return this.getTheoriesStorage().then(() => {
+      return this.storage.set('theories', {
+        "theories": theories
+      });
     });
   }
 
@@ -66,8 +67,8 @@ export class TheoryProvider {
     });
   }
 
-  private emitTheoriesDidLoad() {
-    this.events.publish('theories:loaded', null, null);
+  private emitTheoriesDidChange() {
+    this.events.publish('theories:changed', null, null);
   }
 
   private compareTheoriesByOrder(a, b) {

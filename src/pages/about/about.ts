@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Events } from 'ionic-angular';
+import { Events } from 'ionic-angular';
 import { WpPageProvider } from '../../providers/wp-page/wp-page';
 
 @Component({
@@ -7,25 +7,23 @@ import { WpPageProvider } from '../../providers/wp-page/wp-page';
   templateUrl: 'about.html'
 })
 export class AboutPage {
-  mainContent = null;
+  mainContent;
 
-  constructor(public navCtrl: NavController,
-    public navParams: NavParams,
-    private events: Events,
+  constructor(private events: Events,
     private wpPageProvider: WpPageProvider) {
-      this.listenForPagesDidLoad();
+      this.listenForPagesDidChange();
       this.mainContent = this.wpPageProvider.getAboutPage();
   }
 
-  private listenForPagesDidLoad() {
-    this.events.subscribe('wpPages:loaded', () => {
-      this.unlistenForPagesDidLoad();
+  private listenForPagesDidChange() {
+    this.events.subscribe('wpPages:change', () => {
+      this.unlistenForPagesDidChange();
       this.mainContent = this.wpPageProvider.getAboutPage();
     });
   }
 
-  private unlistenForPagesDidLoad() {
-    this.events.unsubscribe('wpPages:loaded', null);
+  private unlistenForPagesDidChange() {
+    this.events.unsubscribe('wpPages:change', null);
   }
 
 }
