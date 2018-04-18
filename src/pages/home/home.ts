@@ -11,27 +11,33 @@ import { Storage } from '@ionic/storage';
 export class HomePage {
   dailyMotivation;
 
-  constructor(public navCtrl: NavController,
+  constructor(private navCtrl: NavController,
     private motivationProvider: MotivationProvider,
     private events: Events,
     private storage: Storage) {
-    this.listenForMotivationsDidLoad();
-    
+    this.listenForMotivationsDidChange();
+    this.getDailyMotivation();
+  }
+
+  public deleteStorage() {
+    this.storage.remove('exercises');
+    this.storage.remove('motivations');
+    this.storage.remove('notificationSettings');
+    this.storage.remove('theories');
+    this.storage.remove('wp_pages');
   }
 
   public loadSettings() {
     this.navCtrl.push(SettingsPage);
   }
 
-  private setDailyMotivation() {
-    this.motivationProvider.getDailyMotivation().then(motivation => {
-      this.dailyMotivation = motivation;
-    });
+  private getDailyMotivation() {
+    this.dailyMotivation = this.motivationProvider.getDailyMotivation();
   }
 
-  private listenForMotivationsDidLoad() {
-    this.events.subscribe('motivations:loaded', () => {
-      this.setDailyMotivation();
+  private listenForMotivationsDidChange() {
+    this.events.subscribe('motivations:change', () => {
+      this.getDailyMotivation();
     });
   }
 }
