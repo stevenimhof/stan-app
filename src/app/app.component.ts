@@ -9,6 +9,7 @@ import { MotivationProvider } from '../providers/motivation/motivation';
 import { TheoryProvider } from '../providers/theory/theory';
 import { NotificationProvider } from '../providers/notification/notification';
 import { WpPageProvider } from '../providers/wp-page/wp-page';
+import { NetworkProvider } from '../providers/network/network';
 
 @Component({
   templateUrl: 'app.html'
@@ -23,8 +24,9 @@ export class MyApp {
     private theory: TheoryProvider,
     private exerciseProvider: ExerciseProvider,
     private motivationProvider: MotivationProvider,
-    private notificationProvider: NotificationProvider,
-    private wpPageProvider: WpPageProvider) {
+    private wpPageProvider: WpPageProvider,
+    private networkProvider: NetworkProvider
+  ) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -34,8 +36,9 @@ export class MyApp {
       this.motivationProvider.checkForUpdates();
       this.exerciseProvider.checkForUpdates();
       this.theory.checkForUpdates();
-      //this.notificationProvider.loadSettings();
       this.wpPageProvider.checkForUpdates();
+
+      this.networkProvider.initializeNetworkEvents();
     });
   }
 }

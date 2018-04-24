@@ -29,6 +29,7 @@ import { MotivationProvider } from '../providers/motivation/motivation';
 import { TheoryProvider } from '../providers/theory/theory';
 import { NotificationProvider } from '../providers/notification/notification';
 import { WpPageProvider } from '../providers/wp-page/wp-page';
+import { NetworkProvider } from '../providers/network/network';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { WpPageProvider } from '../providers/wp-page/wp-page';
     MotivationProvider,
     TheoryProvider,
     NotificationProvider,
-    WpPageProvider
+    WpPageProvider,
+    NetworkProvider
   ]
 })
 export class AppModule {

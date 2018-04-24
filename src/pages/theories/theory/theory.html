@@ -11,8 +11,8 @@
   <div [innerHtml]=theory.content.rendered></div>
 
   <div *ngIf="videoSrc">
-    <iframe *ngIf="hasInternetConnectivity" [src]="videoSrc" frameborder="0" allowfullscreen="true"></iframe>
-    <ion-card *ngIf="!hasInternetConnectivity">
+    <iframe *ngIf="isOnline" [src]="videoSrc" frameborder="0" allowfullscreen="true"></iframe>
+    <ion-card *ngIf="!isOnline">
       <ion-card-content>
         <ion-icon name="alert"></ion-icon> Hier sollte ein Video erscheinen, es scheint jedoch dass du keine Internet-Verbindung hast. Bitte überprüfe deine Internet-Verbindung.
       </ion-card-content>

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { Component, NgZone } from '@angular/core';
+import { NavParams, Events } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Network } from '@ionic-native/network';
+import { NetworkProvider } from '../../../providers/network/network';
 
 @Component({
   selector: 'page-theory',
@@ -10,26 +10,21 @@ import { Network } from '@ionic-native/network';
 export class TheoryPage {
   theory: any;
   videoSrc = null;
-  hasInternetConnectivity = navigator.onLine;
+  isOnline;
 
-  constructor(public navCtrl: NavController,
-    public navParams: NavParams,
+  constructor(private navParams: NavParams,
     private sanitizer: DomSanitizer,
-    private network: Network) {
+    private networkProvider: NetworkProvider,
+    private _zone: NgZone,
+    private events: Events) {
 
-    this.theory = navParams.get('theory');
-    this.watchInternetConnectivity();
+    this.theory = this.navParams.get('theory');
     this.setVideoUrl();
   }
 
-  private watchInternetConnectivity() {
-    this.network.onDisconnect().subscribe(() => {
-      this.hasInternetConnectivity = false;
-    });
-    this.network.onConnect().subscribe(() => {
-      this.hasInternetConnectivity = true;
-
-    });
+  ionViewDidLoad() {
+    this.setOnlineStatus(this.networkProvider.isOnline());
+    this.onNetworkChange();
   }
 
   private setVideoUrl() {
@@ -37,5 +32,26 @@ export class TheoryPage {
       const url = 'https://www.youtube.com/embed/' + this.theory.acf.youtube_video_id;
       this.videoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
+  }
+
+  private onNetworkChange() {
+    this.events.subscribe('network:offline', () => {
+      this.setOnlineStatus(false);
+    });
+
+    this.events.subscribe('network:online', () => {
+      this.setOnlineStatus(true);
+    });
+  }
+
+  private setOnlineStatus(flag) {
+    this._zone.run(() => {
+      this.isOnline = flag;
+    });
+  }
+
+  ngOnDestroy() {
+    this.events.unsubscribe('network:offline');
+    this.events.unsubscribe('network:online');
   }
 }
