@@ -34,7 +34,7 @@ export class MyApp {
       this.motivationProvider.checkForUpdates();
       this.exerciseProvider.checkForUpdates();
       this.theory.checkForUpdates();
-      this.notificationProvider.loadSettings();
+      //this.notificationProvider.loadSettings();
       this.wpPageProvider.checkForUpdates();
     });
   }

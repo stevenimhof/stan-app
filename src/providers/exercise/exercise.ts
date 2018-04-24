@@ -12,6 +12,9 @@ import { Events } from 'ionic-angular';
 export class ExerciseProvider {
   categories = [];
   exercises = [];
+  notifications = [];
+  receivedDataFromRest = false;
+  canDisplaySpinner = true;
 
   constructor(public http: HttpClient,
     private config: Config,
@@ -19,34 +22,37 @@ export class ExerciseProvider {
     private events: Events) {
   }
 
-  public saveExercisesAndCategories() {
-    return this.getExercisesStorage().then( () => {
+  public saveExerciseData() {
+    return this.getExerciseStorage().then(() => {
       return this.storage.set('exercises', {
         "exercises": this.exercises,
         "categories": this.categories,
-        "evaluations": []
+        "notificationSettings": this.notifications
       });
     });
   }
 
-  public getCategoriesFromWordpress() {
-    return this.http.get(this.config.WP_API_URL + '/wp/v2/exercise_category?' + this.config.WP_MAX_POSTS)
+  private getCategoriesFromWordpress() {
+    const r = Math.floor((Math.random() *2) + 1);
+    let url = 'http://www.mocky.io/v2/5ade142f300000262b4b29d8?mocky-delay=3000ms';
+    if (r == 2) {
+      url = 'http://www.mocky.io/v2/5adee0683300006d00e4d652?mocky-delay=3000ms';
+    }
+
+    return this.http.get(url)
+    //return this.http.get(this.config.WP_API_URL + '/wp/v2/exercise_category?' + this.config.WP_MAX_POSTS)
       .map(result => {
         return this.transformCategories(result);
       })
       .catch(error => Observable.throw("Error while trying to get data from server"));
   }
 
-  public getExercisesFromWordpress() {
+  private getExercisesFromWordpress() {
     return this.http.get(this.config.WP_API_URL + '/wp/v2/exercise?' + this.config.WP_MAX_POSTS)
       .map(result => {
         return result;
       })
       .catch(error => Observable.throw("Error while trying to get data from server"));
-  }
-
-  public deleteExercises() {
-    this.storage.remove('exercises');
   }
 
   /**
@@ -55,24 +61,35 @@ export class ExerciseProvider {
    * In addition, it emits an event that the data is now available via the storage.
    */
   public checkForUpdates() {
-    this.getExercisesStorage().then(localExercises => {
-      this.getCategoriesFromWordpress().subscribe(unsortedCategories => {
-        const categories = unsortedCategories.sort(this.compareCategoriesByOrder);
-        this.getExercisesFromWordpress().subscribe(exercises => {
-          if (!this.compareExercises(localExercises, exercises, categories)) {
-            this.categories = categories;
-            this.exercises = exercises;
+    this.getExerciseStorage().then(localData => {
+      this.categories = localData ? localData['categories'] : [];
+      this.exercises = localData ? localData['exercises'] : [];
+      this.notifications = localData ? localData['notificationSettings'] : [];
 
-            this.saveExercisesAndCategories().then(() => {
-              this.emitExercisesDidLoad();
-            });
-          } else {
-            this.categories = localExercises['categories'];
-            this.exercises = localExercises['exercises'];
-            this.emitExercisesDidLoad();
-          }
-        });
-      });
+      this.getCategoriesFromWordpress()
+        .timeout(this.config.REST_TIMEOUT_DURATION)
+        .subscribe(unsortedCategories => {
+          const categories = unsortedCategories.sort(this.compareCategoriesByOrder);
+          this.getExercisesFromWordpress()
+            .timeout(this.config.REST_TIMEOUT_DURATION)
+            .subscribe(exercises => {
+              this.receivedDataFromRest = true;
+
+              if (!this.compareExerciseData(localData, exercises, categories)) {
+                this.categories = categories;
+                this.exercises = exercises;
+
+                this.emitExercisesDidChange();
+                this.saveExerciseData();
+                this.prepareNotifications();
+              }
+              this.emitSettingsDidLoad();
+            },
+            err => { this.canDisplaySpinner = false; }
+          );
+        },
+        err => { this.canDisplaySpinner = false; }
+      );
     });
   }
 
@@ -84,11 +101,68 @@ export class ExerciseProvider {
     return this.exercises;
   }
 
-  public emitExercisesDidLoad() {
-    this.events.publish('exercises:loaded', null, null);
+  public getSettings() {
+    return this.notifications;
   }
 
-  private compareCategoriesByOrder(a,b) {
+  public emitExercisesDidChange() {
+    this.events.publish('exercises:change', null, null);
+  }
+
+  // public emitSettingsDidChange() {
+  //   this.events.publish('notificationSettings:change', null, null);
+  // }
+
+  public emitSettingsDidLoad() {
+    this.events.publish('notificationSettings:load', null, null);
+  }
+
+    /**
+   * Prepare the notification list based on the data from the exercise categories
+   */
+  public prepareNotifications() {
+    if (!this.categories.length) return;
+    // do we have any notifications? if that's not the case we need to
+    // create a list from the exercise categories
+    if (this.notifications === undefined || !this.notifications.length) {
+      this.copyAllNotificationsFromCategories();
+      this.saveExerciseData();
+    } else {
+      // compare exercise categories and items in notification settings
+      // if there's a change we need to update our list
+      if (JSON.stringify(this.categories) !== JSON.stringify(this.notifications)) {
+        this.updateSettings();
+        this.saveExerciseData();
+      }
+    }
+  }
+
+    /**
+   * Update the list of notification settings
+   * 
+   * Take the current notification settings and add any new items
+   * from the exercise category list. Don't change the 'isActive' property 
+   * of the current notification settings
+   */
+  private updateSettings() {
+    const temp: any = this.notifications;
+    this.copyAllNotificationsFromCategories();
+    this.notifications.forEach(item => {
+      const found = temp.find(el => el.id === item.id);
+      if (found) {
+        item.isActive = found.isActive;
+      }
+    });
+  }
+
+  private copyAllNotificationsFromCategories() {
+    this.notifications = [];
+    this.categories.forEach(cat => {
+      this.notifications.push({ id: cat.id, name: cat.name, isActive: true });
+    });
+  }
+
+  private compareCategoriesByOrder(a, b) {
     if (parseInt(a.order) < parseInt(b.order)) return -1;
     if (parseInt(a.order) > parseInt(b.order)) return 1;
     return 0;
@@ -116,13 +190,13 @@ export class ExerciseProvider {
     return result;
   }
 
-  private compareExercises(localExercises, exercisesFromRest, categoriesFromRest) {
-    return localExercises
-      && JSON.stringify(localExercises['exercises']) == JSON.stringify(exercisesFromRest)
-      && JSON.stringify(localExercises['categories']) == JSON.stringify(categoriesFromRest);
+  private compareExerciseData(localData, exercisesFromRest, categoriesFromRest) {
+    return localData
+      && JSON.stringify(localData['exercises']) == JSON.stringify(exercisesFromRest)
+      && JSON.stringify(localData['categories']) == JSON.stringify(categoriesFromRest);
   }
 
-  private getExercisesStorage() {
+  private getExerciseStorage() {
     return this.storage.ready().then(() => {
       return this.storage.get('exercises')
     });

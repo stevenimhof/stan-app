@@ -9,17 +9,15 @@ import { TheoryProvider } from '../../../providers/theory/theory';
   templateUrl: 'theories.html',
 })
 export class TheoriesPage {
-  theories = [];
+  theories;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private events: Events,
     private theoryProvider: TheoryProvider) {
 
-    this.listenForTheoriessDidLoad();
-    if (!this.theories.length) {
-      this.getData();
-    }
+    this.listenForTheoriessDidChange();
+    this.getTheories();
   }
 
   public loadTheory(theory) {
@@ -28,19 +26,19 @@ export class TheoriesPage {
     });
   }
 
-  private getData() {
+  private getTheories() {
     this.theories = this.theoryProvider.getTheories();
   }
 
-  private listenForTheoriessDidLoad() {
-    this.events.subscribe('theories:loaded', () => {
-      this.getData();
-      this.unlistenForTheoriessDidLoad();
+  private listenForTheoriessDidChange() {
+    this.events.subscribe('theories:change', () => {
+      this.getTheories();
+      this.unlistenForTheoriessDidChange();
     });
   }
 
-  private unlistenForTheoriessDidLoad() {
-    this.events.unsubscribe('theories:loaded', null);
+  private unlistenForTheoriessDidChange() {
+    this.events.unsubscribe('theories:change', null);
   }
 
 }
