@@ -18,6 +18,7 @@ accordion {
         &.collapsed {
             height: 0 !important;
             max-height: 0;
+            border-bottom-width: 0px;
             //transition: max-height 0.3s cubic-bezier(0,1,0,1);
         }
         .inner {

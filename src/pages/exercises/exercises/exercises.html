@@ -15,18 +15,15 @@
           (click)="toggleCategory(category)"
           [ngClass]="{active: isCategoryShown(category)}">
           <ion-icon [name]="isCategoryShown(category) ? 'arrow-down' : 'arrow-forward'"></ion-icon>
-          
-          <div item-end class="categoryColor"></div>
-          &nbsp;
-          {{category.name}}
+          &nbsp; {{category.name}}
         </ion-item>
-        <ion-item class="item-accordion"
+        <button ion-item class="item-accordion"
           *ngFor="let exercise of category.exercises"
-          [ngClass]="{'custom-fadeout':!isCategoryShown(category)}">
+          [ngClass]="{'custom-fadeout':!isCategoryShown(category)}" (click)="loadExercise(exercise)">
           <ion-label no-margin (click)="loadExercise(exercise)">
             {{exercise.title.rendered}}
           </ion-label>
-        </ion-item>
+        </button>
       </div>
     </div>
   </ion-list>
