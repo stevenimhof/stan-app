@@ -26,9 +26,11 @@ export class SettingsPage {
   }
 
   public init() {
-    this.spinner = this.loadingCtrl.create({
-      content: 'Bitte warten...'
-    });
+    if (this.exerciseProvider.canDisplaySpinner) {
+      this.spinner = this.loadingCtrl.create({
+        content: 'Bitte warten...',
+      });
+    }
     this.listenForNotificationSettingsDidLoad();
     //this.listenForNotificationSettingsDidChange();
     this.setData();
@@ -68,7 +70,7 @@ export class SettingsPage {
       this.setData();
       this.receivedNotificationSettings();
     } else {
-      this.spinner.present();
+      if (this.spinner) this.spinner.present();
       this.events.subscribe('notificationSettings:load', () => {
         this.setData();
         this.receivedNotificationSettings();
@@ -82,9 +84,7 @@ export class SettingsPage {
   }
 
   private receivedNotificationSettings() {
-    if (this.spinner) {
-      this.spinner.dismiss();
-    }
+    if (this.spinner) this.spinner.dismiss();
     this.setEditingDisabledStatus(false);
   }
 

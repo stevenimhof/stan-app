@@ -14,6 +14,7 @@ export class ExerciseProvider {
   exercises = [];
   notifications = [];
   receivedDataFromRest = false;
+  canDisplaySpinner = true;
 
   constructor(public http: HttpClient,
     private config: Config,
@@ -32,7 +33,13 @@ export class ExerciseProvider {
   }
 
   private getCategoriesFromWordpress() {
-    return this.http.get('http://www.mocky.io/v2/5ade142f300000262b4b29d8?mocky-delay=3000ms')
+    const r = Math.floor((Math.random() *2) + 1);
+    let url = 'http://www.mocky.io/v2/5ade142f300000262b4b29d8?mocky-delay=3000ms';
+    if (r == 2) {
+      url = 'http://www.mocky.io/v2/5adee0683300006d00e4d652?mocky-delay=3000ms';
+    }
+
+    return this.http.get(url)
     //return this.http.get(this.config.WP_API_URL + '/wp/v2/exercise_category?' + this.config.WP_MAX_POSTS)
       .map(result => {
         return this.transformCategories(result);
@@ -78,10 +85,10 @@ export class ExerciseProvider {
               }
               this.emitSettingsDidLoad();
             },
-            err => { console.log(err); }
+            err => { this.canDisplaySpinner = false; }
           );
         },
-        err => { console.log(err); }
+        err => { this.canDisplaySpinner = false; }
       );
     });
   }

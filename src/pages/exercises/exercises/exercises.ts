@@ -24,17 +24,18 @@ export class ExercisesPage {
   }
 
   public init() {
-    this.spinner = this.loadingCtrl.create({
-      content: 'Bitte warten...'
-    });
+    if (this.exerciseProvider.canDisplaySpinner) {
+      this.spinner = this.loadingCtrl.create({
+        content: 'Bitte warten...',
+      });
+    }
     this.listenForExercisesDidChange();
 
-    // was the data already read by the time we initialize this class?
+    this.notifications = this.exerciseProvider.getSettings();
+    // was the data already received by the time we initialize this class?
     // if not we need to wait for the event
-    //this.notifications = this.exerciseProvider.getSettings();
-    if (this.exerciseProvider.receivedDataFromRest) {
-      this.notifications = this.exerciseProvider.getSettings();
-    } else {
+    // this.notifications = this.exerciseProvider.getSettings();
+    if (!this.exerciseProvider.receivedDataFromRest) {
       this.listenForNotificationSettingsDidLoad();
     }
     this.setData();
@@ -78,12 +79,11 @@ export class ExercisesPage {
   }
 
   private listenForNotificationSettingsDidLoad() {
-    this.spinner.present();
+    if (this.spinner) this.spinner.present();
+
     this.events.subscribe('notificationSettings:load', () => {
       this.notifications = this.exerciseProvider.getSettings();
-      if (this.spinner) {
-        this.spinner.dismiss();
-      }
+      if (this.spinner) this.spinner.dismiss();
       this.unlistenForNotificationSettingsDidLoad();
     });
   }
