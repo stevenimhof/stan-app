@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Events } from 'ionic-angular';
+import { NavController, Events, LoadingController } from 'ionic-angular';
 
 import { ExercisePage } from '../exercise/exercise';
 import { ExerciseProvider } from '../../../providers/exercise/exercise';
-import { NotificationProvider } from '../../../providers/notification/notification';
 
 @Component({
   selector: 'page-exercises',
@@ -14,31 +13,31 @@ export class ExercisesPage {
   categories = [];
   exercises = [];
   notifications = [];
-  haveExercisesLoaded: boolean;
-  haveNotificationSettingsLoaded: boolean;
+  spinner = null;
 
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
+    private navCtrl: NavController,
     private exerciseProvider: ExerciseProvider,
-    private notificationProvider:NotificationProvider,
+    private loadingCtrl: LoadingController,
     private events: Events) {
       this.init();
   }
 
   public init() {
-    this.haveExercisesLoaded = false;
-    this.haveNotificationSettingsLoaded = false;
+    this.spinner = this.loadingCtrl.create({
+      content: 'Bitte warten...'
+    });
+    this.listenForExercisesDidChange();
 
-    this.listenForExercisesDidLoad();
-    this.listenForNotificationSettingsDidChange();
-    if (!this.categories.length || !this.exercises.length) {
-      this.getData();
+    // was the data already read by the time we initialize this class?
+    // if not we need to wait for the event
+    //this.notifications = this.exerciseProvider.getSettings();
+    if (this.exerciseProvider.receivedDataFromRest) {
+      this.notifications = this.exerciseProvider.getSettings();
+    } else {
+      this.listenForNotificationSettingsDidLoad();
     }
-  }
-
-  public deleteStorage() {
-    this.exerciseProvider.deleteExercises();
+    this.setData();
   }
 
   public isCategoryVisible(category) {
@@ -67,29 +66,36 @@ export class ExercisesPage {
     });
   }
 
-  private listenForExercisesDidLoad() {
-    this.events.subscribe('exercises:loaded', () => {
-      this.haveExercisesLoaded = true;
-      this.unlistenForExercisesDidLoad();
-      this.getData();
+  private listenForExercisesDidChange() {
+    this.events.subscribe('exercises:change', () => {
+      this.unlistenForExercisesDidChange();
+      this.setData();
     });
   }
 
-  private unlistenForExercisesDidLoad() {
-    this.events.unsubscribe('exercises:loaded', null);
+  private unlistenForExercisesDidChange() {
+    this.events.unsubscribe('exercises:change', null);
   }
 
-  private listenForNotificationSettingsDidChange() {
-    this.events.subscribe('notificationSettings:change', () => {
-      this.haveNotificationSettingsLoaded = true;
-      this.notifications = this.notificationProvider.getSettings();
+  private listenForNotificationSettingsDidLoad() {
+    this.spinner.present();
+    this.events.subscribe('notificationSettings:load', () => {
+      this.notifications = this.exerciseProvider.getSettings();
+      if (this.spinner) {
+        this.spinner.dismiss();
+      }
+      this.unlistenForNotificationSettingsDidLoad();
     });
   }
 
-  private getData() {
+  private unlistenForNotificationSettingsDidLoad() {
+    this.events.unsubscribe('notificationSettings:load', null);
+  }
+
+
+  private setData() {
     this.categories = this.exerciseProvider.getCategories();
     this.exercises = this.exerciseProvider.getExercises();
-    this.notifications = this.notificationProvider.getSettings();
     this.prepareData();
   }
 

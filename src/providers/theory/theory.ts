@@ -68,7 +68,7 @@ export class TheoryProvider {
   }
 
   private emitTheoriesDidChange() {
-    this.events.publish('theories:changed', null, null);
+    this.events.publish('theories:change', null, null);
   }
 
   private compareTheoriesByOrder(a, b) {

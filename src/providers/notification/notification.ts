@@ -22,13 +22,9 @@ export class NotificationProvider {
   public loadSettings() {
     this.getSettingsStorage().then(settings => {
       this.settings = settings ? settings : [];
-    }).then(() => {
-      this.emitSettingsDidChange();
+     }).then(() => {
+       this.emitSettingsDidLoad();
     });
-  }
-
-  public emitSettingsDidChange() {
-    this.events.publish('notificationSettings:change', null, null);
   }
 
   public saveSettings(settings) {
@@ -38,6 +34,14 @@ export class NotificationProvider {
     }).then(() => {
       this.emitSettingsDidChange();
     });
+  }
+
+  private emitSettingsDidChange() {
+    this.events.publish('notificationSettings:change', null, null);
+  }
+
+  private emitSettingsDidLoad() {
+    this.events.publish('notificationSettings:load', null, null);
   }
 
   private getSettingsStorage() {

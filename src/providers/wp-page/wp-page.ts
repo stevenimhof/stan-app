@@ -59,7 +59,7 @@ export class WpPageProvider {
   }
 
   private emitPagesDidChange() {
-    this.events.publish('wpPages:changed', null, null);
+    this.events.publish('wpPages:change', null, null);
   }
 
   private getPagesFromWordpress() {
