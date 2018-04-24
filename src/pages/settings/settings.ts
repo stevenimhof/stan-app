@@ -13,7 +13,6 @@ export class SettingsPage {
 
   categories = [];
   notifications = [];
-  editingDisabledStatus = true;
   spinner = null;
 
   constructor(private navCtrl: NavController,
@@ -85,7 +84,6 @@ export class SettingsPage {
 
   private receivedNotificationSettings() {
     if (this.spinner) this.spinner.dismiss();
-    this.setEditingDisabledStatus(false);
   }
 
   /**
@@ -111,14 +109,6 @@ export class SettingsPage {
     this.categories.forEach(cat => {
       this.notifications.push({ id: cat.id, name: cat.name, isActive: true });
     });
-  }
-
-  private setEditingDisabledStatus(flag) {
-    this.editingDisabledStatus = flag;
-  }
-
-  private getEditingDisabledStatus() {
-    return this.editingDisabledStatus;
   }
 
 }
