@@ -1,7 +1,5 @@
-import { Component, NgZone } from '@angular/core';
-import { NavParams, Events } from 'ionic-angular';
-import { DomSanitizer } from '@angular/platform-browser';
-import { NetworkProvider } from '../../../providers/network/network';
+import { Component } from '@angular/core';
+import { NavParams } from 'ionic-angular';
 
 @Component({
   selector: 'page-theory',
@@ -9,49 +7,14 @@ import { NetworkProvider } from '../../../providers/network/network';
 })
 export class TheoryPage {
   theory: any;
-  videoSrc = null;
-  isOnline;
+  videoId;
 
-  constructor(private navParams: NavParams,
-    private sanitizer: DomSanitizer,
-    private networkProvider: NetworkProvider,
-    private _zone: NgZone,
-    private events: Events) {
-
+  constructor(private navParams: NavParams) {
     this.theory = this.navParams.get('theory');
-    this.setVideoUrl();
+    this.setVideoId();
   }
 
-  ionViewDidLoad() {
-    this.setOnlineStatus(this.networkProvider.isOnline());
-    this.onNetworkChange();
-  }
-
-  private setVideoUrl() {
-    if (this.theory.acf.youtube_video_id) {
-      const url = 'https://www.youtube.com/embed/' + this.theory.acf.youtube_video_id;
-      this.videoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    }
-  }
-
-  private onNetworkChange() {
-    this.events.subscribe('network:offline', () => {
-      this.setOnlineStatus(false);
-    });
-
-    this.events.subscribe('network:online', () => {
-      this.setOnlineStatus(true);
-    });
-  }
-
-  private setOnlineStatus(flag) {
-    this._zone.run(() => {
-      this.isOnline = flag;
-    });
-  }
-
-  ngOnDestroy() {
-    this.events.unsubscribe('network:offline');
-    this.events.unsubscribe('network:online');
+  private setVideoId() {
+    this.videoId = this.theory.acf.youtube_video_id;
   }
 }

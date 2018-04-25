@@ -9,14 +9,6 @@
 
   <accordion *ngIf="exercise.acf.theory" headline="Erklärung anzeigen" collapsed="!collapsed">
     <div *ngIf="exercise.acf.theory" [innerHtml]="exercise.acf.theory"></div>
-
-    <div *ngIf="videoSrc">
-      <iframe *ngIf="hasInternetConnectivity" [src]="videoSrc" frameborder="0" allowfullscreen="true"></iframe>
-      <ion-card *ngIf="!hasInternetConnectivity">
-        <ion-card-content>
-            <ion-icon name="alert"></ion-icon> No Internet connection. Please check your connection to see an addtional video.
-        </ion-card-content>
-      </ion-card>
-    </div>
+    <youtube-video [id]="videoId"></youtube-video>
   </accordion>
 </ion-content>

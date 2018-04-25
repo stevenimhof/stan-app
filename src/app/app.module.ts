@@ -27,9 +27,9 @@ import { Network } from '@ionic-native/network';
 import { ExerciseProvider } from '../providers/exercise/exercise';
 import { MotivationProvider } from '../providers/motivation/motivation';
 import { TheoryProvider } from '../providers/theory/theory';
-import { NotificationProvider } from '../providers/notification/notification';
 import { WpPageProvider } from '../providers/wp-page/wp-page';
 import { NetworkProvider } from '../providers/network/network';
+import { YoutubeVideoComponent } from '../components/youtube-video/youtube-video';
 
 @NgModule({
   declarations: [
@@ -45,7 +45,8 @@ import { NetworkProvider } from '../providers/network/network';
     AboutPage,
     KeepHtmlPipe,
     StripHtmlPipe,
-    AccordionComponent
+    AccordionComponent,
+    YoutubeVideoComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +76,6 @@ import { NetworkProvider } from '../providers/network/network';
     ExerciseProvider,
     MotivationProvider,
     TheoryProvider,
-    NotificationProvider,
     WpPageProvider,
     NetworkProvider
   ]

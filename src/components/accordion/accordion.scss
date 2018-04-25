@@ -15,12 +15,10 @@ accordion {
         overflow:hidden;
         transition:max-height 0.3s cubic-bezier(1,0,1,0);
         height:auto;
-        //max-height:9999px; // pump it ALL the way up!
         &.collapsed {
             height: 0 !important;
             max-height: 0;
             border-bottom-width: 0px;
-            //transition: max-height 0.3s cubic-bezier(0,1,0,1);
         }
         .inner {
             padding: 10px;
