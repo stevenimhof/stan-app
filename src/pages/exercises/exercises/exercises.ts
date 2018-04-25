@@ -49,6 +49,13 @@ export class ExercisesPage {
     return result !== undefined ? result.isActive : false;
   }
 
+  public isAtLeastOneCategoryVisible() {
+    if (!this.notifications.length) return false;
+    
+    const result = this.notifications.find( item => item.isActive === true );
+    return result !== undefined ? true : false;
+  }
+
   public toggleCategory(category) {
     if (this.isCategoryShown(category)) {
       this.shownCategory = null;

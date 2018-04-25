@@ -10,7 +10,7 @@ import { NetworkProvider } from '../../providers/network/network';
 export class YoutubeVideoComponent {
   @Input() id: any;
   videoId;
-  isOnline
+  isOnline;
 
   constructor(private sanitizer: DomSanitizer,
     private networkProvider: NetworkProvider,
@@ -36,6 +36,7 @@ export class YoutubeVideoComponent {
 
   private setOnlineStatus(flag) {
     this._zone.run(() => {
+      console.log('setting status to: '+flag);
       this.isOnline = flag;
     });
   }

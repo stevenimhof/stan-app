@@ -16,8 +16,8 @@ export class TheoriesPage {
     private events: Events,
     private theoryProvider: TheoryProvider) {
 
-    this.listenForTheoriessDidChange();
-    this.getTheories();
+    this.listenForTheoriesDidChange();
+    this.setTheories();
   }
 
   public loadTheory(theory) {
@@ -26,18 +26,18 @@ export class TheoriesPage {
     });
   }
 
-  private getTheories() {
+  private setTheories() {
     this.theories = this.theoryProvider.getTheories();
   }
 
-  private listenForTheoriessDidChange() {
+  private listenForTheoriesDidChange() {
     this.events.subscribe('theories:change', () => {
-      this.getTheories();
-      this.unlistenForTheoriessDidChange();
+      this.setTheories();
+      this.unlistenForTheoriesDidChange();
     });
   }
 
-  private unlistenForTheoriessDidChange() {
+  private unlistenForTheoriesDidChange() {
     this.events.unsubscribe('theories:change', null);
   }
 

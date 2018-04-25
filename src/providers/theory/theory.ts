@@ -16,6 +16,10 @@ export class TheoryProvider {
     private events: Events) {
   }
 
+  public getTheories() {
+    return this.theories;
+  }
+
   /**
    * Checks for updates by comparing data from server and from local storage
    * If there is a new version on the server, it will be saved in the local storage.
@@ -30,15 +34,11 @@ export class TheoryProvider {
           const theories = unsortedTheories.sort(this.compareTheoriesByOrder);
           if (!this.compareTheories(localTheories, theories)) {
             this.theories = theories;
-            this.emitTheoriesDidChange();
             this.saveTheories(theories);
           }
+          this.emitTheoriesDidChange();
         }, error => { });
     });
-  }
-
-  public getTheories() {
-    return this.theories;
   }
 
   private getTheoriesFromWordpress() {
@@ -71,6 +71,10 @@ export class TheoryProvider {
     this.events.publish('theories:change', null, null);
   }
 
+  /**
+   * Compares two theories with 'menu_order' property
+   * You can use this method to order a list of theories
+   */
   private compareTheoriesByOrder(a, b) {
     if (parseInt(a.menu_order) < parseInt(b.menu_order)) return -1;
     if (parseInt(a.menu_order) > parseInt(b.menu_order)) return 1;

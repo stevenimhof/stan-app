@@ -9,6 +9,13 @@
 
 <ion-content>
   <ion-list>
+    <div *ngIf="!isAtLeastOneCategoryVisible()">
+      <ion-card>
+          <ion-card-content>
+            Keine Inhalte verfügbar
+          </ion-card-content>
+      </ion-card>
+    </div>
     <div *ngFor="let category of categories">
       <div *ngIf="isCategoryVisible(category)">
         <ion-item class="item-stable"

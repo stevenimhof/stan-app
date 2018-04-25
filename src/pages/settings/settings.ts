@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, Events, LoadingController } from 'ionic-angular';
 import { ExerciseProvider } from '../../providers/exercise/exercise';
-import { NotificationProvider } from '../../providers/notification/notification';
 
 import { AboutPage } from "../about/about";
 
@@ -18,7 +17,6 @@ export class SettingsPage {
   constructor(private navCtrl: NavController,
     private navParams: NavParams,
     private exerciseProvider: ExerciseProvider,
-    private notificationProvider: NotificationProvider,
     private loadingCtrl: LoadingController,
     private events: Events) {
       this.init();
