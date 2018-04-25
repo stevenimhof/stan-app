@@ -20,7 +20,7 @@ export class ExercisesPage {
     private exerciseProvider: ExerciseProvider,
     private loadingCtrl: LoadingController,
     private events: Events) {
-      this.init();
+    this.init();
   }
 
   public init() {
@@ -44,15 +44,15 @@ export class ExercisesPage {
   public isCategoryVisible(category) {
     // if we don't have any notification settings we want to show all by default
     if (!this.notifications.length) return true;
-    
-    const result = this.notifications.find( item => item.id === category.id );
+
+    const result = this.notifications.find(item => item.id === category.id);
     return result !== undefined ? result.isActive : false;
   }
 
   public isAtLeastOneCategoryVisible() {
     if (!this.notifications.length) return false;
-    
-    const result = this.notifications.find( item => item.isActive === true );
+
+    const result = this.notifications.find(item => item.isActive === true);
     return result !== undefined ? true : false;
   }
 
@@ -87,7 +87,6 @@ export class ExercisesPage {
 
   private listenForNotificationSettingsDidLoad() {
     if (this.spinner) this.spinner.present();
-
     this.events.subscribe('notificationSettings:load', () => {
       this.notifications = this.exerciseProvider.getSettings();
       if (this.spinner) this.spinner.dismiss();
@@ -117,9 +116,9 @@ export class ExercisesPage {
     });
   }
 
-  private compareExercisesByTitel(a,b) {
-    if(a.title.rendered < b.title.rendered) return -1;
-    if(a.title.rendered > b.title.rendered) return 1;
+  private compareExercisesByTitel(a, b) {
+    if (a.title.rendered < b.title.rendered) return -1;
+    if (a.title.rendered > b.title.rendered) return 1;
     return 0;
   }
 }

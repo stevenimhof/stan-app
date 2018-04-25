@@ -19,8 +19,7 @@ export class ExerciseProvider {
   constructor(public http: HttpClient,
     private config: Config,
     private storage: Storage,
-    private events: Events) {
-  }
+    private events: Events) { }
 
   public saveExerciseData() {
     return this.getExerciseStorage().then(() => {
@@ -30,29 +29,6 @@ export class ExerciseProvider {
         "notificationSettings": this.notifications
       });
     });
-  }
-
-  private getCategoriesFromWordpress() {
-    /*const r = Math.floor((Math.random() *2) + 1);
-    let url = 'http://www.mocky.io/v2/5ade142f300000262b4b29d8?mocky-delay=3000ms';
-    if (r == 2) {
-      url = 'http://www.mocky.io/v2/5adee0683300006d00e4d652?mocky-delay=3000ms';
-    }*/
-
-    //return this.http.get(url)
-    return this.http.get(this.config.WP_API_URL + '/wp/v2/exercise_category?' + this.config.WP_MAX_POSTS)
-      .map(result => {
-        return this.transformCategories(result);
-      })
-      .catch(error => Observable.throw("Error while trying to get data from server"));
-  }
-
-  private getExercisesFromWordpress() {
-    return this.http.get(this.config.WP_API_URL + '/wp/v2/exercise?' + this.config.WP_MAX_POSTS)
-      .map(result => {
-        return result;
-      })
-      .catch(error => Observable.throw("Error while trying to get data from server"));
   }
 
   /**
@@ -85,11 +61,11 @@ export class ExerciseProvider {
               }
               this.emitSettingsDidLoad();
             },
-            err => { this.canDisplaySpinner = false; }
-          );
+              err => { this.canDisplaySpinner = false; }
+            );
         },
-        err => { this.canDisplaySpinner = false; }
-      );
+          err => { this.canDisplaySpinner = false; }
+        );
     });
   }
 
@@ -109,15 +85,11 @@ export class ExerciseProvider {
     this.events.publish('exercises:change', null, null);
   }
 
-  // public emitSettingsDidChange() {
-  //   this.events.publish('notificationSettings:change', null, null);
-  // }
-
   public emitSettingsDidLoad() {
     this.events.publish('notificationSettings:load', null, null);
   }
 
-    /**
+  /**
    * Prepare the notification list based on the data from the exercise categories
    */
   public prepareNotifications() {
@@ -137,7 +109,7 @@ export class ExerciseProvider {
     }
   }
 
-    /**
+  /**
    * Update the list of notification settings
    * 
    * Take the current notification settings and add any new items
@@ -153,6 +125,29 @@ export class ExerciseProvider {
         item.isActive = found.isActive;
       }
     });
+  }
+
+  private getCategoriesFromWordpress() {
+    /*const r = Math.floor((Math.random() *2) + 1);
+    let url = 'http://www.mocky.io/v2/5ade142f300000262b4b29d8?mocky-delay=3000ms';
+    if (r == 2) {
+      url = 'http://www.mocky.io/v2/5adee0683300006d00e4d652?mocky-delay=3000ms';
+    }*/
+
+    //return this.http.get(url)
+    return this.http.get(this.config.WP_API_URL + '/wp/v2/exercise_category?' + this.config.WP_MAX_POSTS)
+      .map(result => {
+        return this.transformCategories(result);
+      })
+      .catch(error => Observable.throw("Error while trying to get data from server"));
+  }
+
+  private getExercisesFromWordpress() {
+    return this.http.get(this.config.WP_API_URL + '/wp/v2/exercise?' + this.config.WP_MAX_POSTS)
+      .map(result => {
+        return result;
+      })
+      .catch(error => Observable.throw("Error while trying to get data from server"));
   }
 
   private copyAllNotificationsFromCategories() {

@@ -16,8 +16,7 @@ export class WpPageProvider {
   constructor(private http: HttpClient,
     private config: Config,
     private storage: Storage,
-    private events: Events) {
-  }
+    private events: Events) { }
 
   public getPages() {
     return this.wpPages;
@@ -44,14 +43,15 @@ export class WpPageProvider {
         .subscribe(pagesFromRest => {
           if (!this.comparePages(localPages, pagesFromRest)) {
             this.wpPages = pagesFromRest;
-            this.emitPagesDidChange();
             this.savePages(pagesFromRest);
           }
-        }, error => { });
+          this.emitPagesDidChange();
+        }, error => { }
+        );
     });
   }
 
-  private getPageByID(ID)  {
+  private getPageByID(ID) {
     const page = this.wpPages.filter(page => {
       return page.id === ID;
     });
@@ -63,6 +63,15 @@ export class WpPageProvider {
   }
 
   private getPagesFromWordpress() {
+   
+
+    /*const r = Math.floor((Math.random() *2) + 1);
+    let url = 'http://www.mocky.io/v2/5ae0e67e3200007b00510d64?mocky-delay=3000ms';
+    if (r == 2) {
+      url = 'http://www.mocky.io/v2/5ae0e53c3200000e00510d5e?mocky-delay=3000ms';
+    }*/
+
+    //return this.http.get(url)
     return this.http.get(this.config.WP_API_URL + '/wp/v2/pages?' + this.config.WP_MAX_POSTS)
       .map(result => {
         return result;
