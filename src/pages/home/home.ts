@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { Content } from 'ionic-angular';
 import { NavController, Events } from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
 import { MotivationProvider } from "../../providers/motivation/motivation";
@@ -9,6 +10,7 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'home.html'
 })
 export class HomePage {
+  @ViewChild(Content) content: Content
   dailyMotivation;
 
   constructor(private navCtrl: NavController,
@@ -38,6 +40,7 @@ export class HomePage {
   private listenForMotivationsDidChange() {
     this.events.subscribe('motivations:change', () => {
       this.getDailyMotivation();
+      this.content.resize();
     });
   }
 }
