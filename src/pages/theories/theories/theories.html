@@ -8,13 +8,6 @@
 
 <ion-content>
   <ion-list>
-    <div *ngIf="!theories">
-        <ion-card>
-            <ion-card-content>
-              Keine Inhalte verfügbar
-            </ion-card-content>
-        </ion-card>
-      </div>
     <button ion-item *ngFor="let theory of theories" (click)="loadTheory(theory)">
       {{ theory.title.rendered }}
     </button>  
