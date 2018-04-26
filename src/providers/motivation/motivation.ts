@@ -26,6 +26,7 @@ export class MotivationProvider {
   public changeMotivation() {
     this.getMotivationStorage().then(result => {
       result.settings.date = new Date(0).toJSON().slice(0, 10).replace(/-/g, '/');
+      this.motivations = result;
       this.storage.set('motivations', result);
     });
   }
@@ -66,15 +67,10 @@ export class MotivationProvider {
     });
   }
 
-  private getMotivationsFromWordpress() {
-    return this.http.get(this.config.WP_API_URL + '/wp/v2/motivation?' + this.config.WP_MAX_POSTS)
-      .map(result => {
-        return result;
-      })
-      .catch(error => Observable.throw("Error while trying to get motivations-data from server"));
-  }
-
-  private setDailyMotivation(motivations) {
+  public setDailyMotivation(motivations = null) {
+    if (motivations === null) {
+      motivations = this.motivations['motivations'];
+    }
     const possibleDailyMotivations = this.getPossibleDailyMotivations(motivations);
     const dailyMotivation = this.getRandomMotivation(possibleDailyMotivations);
 
@@ -87,6 +83,14 @@ export class MotivationProvider {
         "lastMotivationID": dailyMotivation.id
       }
     });
+  }
+
+  private getMotivationsFromWordpress() {
+    return this.http.get(this.config.WP_API_URL + '/wp/v2/motivation?' + this.config.WP_MAX_POSTS)
+      .map(result => {
+        return result;
+      })
+      .catch(error => Observable.throw("Error while trying to get motivations-data from server"));
   }
 
   /**
@@ -176,6 +180,7 @@ export class MotivationProvider {
       ...this.motivationStorageModel,
       ...motivations
     };
+    this.motivations = tempMotivations;
     return this.getMotivationStorage().then(() => {
       return this.storage.set('motivations', tempMotivations);
     });

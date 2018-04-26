@@ -50,22 +50,13 @@ export class ExerciseProvider {
             .timeout(this.config.REST_TIMEOUT_DURATION)
             .subscribe(exercises => {
               this.receivedDataFromRest = true;
-
-              if (!this.compareExerciseData(localData, exercises, categories)) {
-                this.categories = categories;
-                this.exercises = exercises;
-
-                this.emitExercisesDidChange();
-                this.saveExerciseData();
-                this.prepareNotifications();
-              }
-              this.emitSettingsDidLoad();
+              this.handleComparisionOfData(localData, exercises, categories);
             },
               err => { this.canDisplaySpinner = false; }
-            );
+          );
         },
           err => { this.canDisplaySpinner = false; }
-        );
+      );
     });
   }
 
@@ -125,6 +116,18 @@ export class ExerciseProvider {
         item.isActive = found.isActive;
       }
     });
+  }
+
+  private handleComparisionOfData(localData, exercises, categories) {
+    if (!this.compareExerciseData(localData, exercises, categories)) {
+      this.categories = categories;
+      this.exercises = exercises;
+
+      this.emitExercisesDidChange();
+      this.saveExerciseData();
+      this.prepareNotifications();
+    }
+    this.emitSettingsDidLoad();
   }
 
   private getCategoriesFromWordpress() {

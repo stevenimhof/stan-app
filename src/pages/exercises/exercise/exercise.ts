@@ -11,7 +11,7 @@ export class ExercisePage {
 
   constructor(
     private navParams: NavParams) {
-    this.exercise = navParams.get('exercise');
+    this.exercise = this.navParams.get('exercise');
     this.setVideoId();
   }
 
