@@ -28,6 +28,7 @@ export class ExercisesPage {
       this.spinner = this.loadingCtrl.create({
         content: 'Bitte warten...',
       });
+      this.listenForSpinnerDismissEvent();
     }
     this.listenForExercisesDidChange();
 
@@ -89,13 +90,23 @@ export class ExercisesPage {
     if (this.spinner) this.spinner.present();
     this.events.subscribe('notificationSettings:load', () => {
       this.notifications = this.exerciseProvider.getSettings();
-      if (this.spinner) this.spinner.dismiss();
+      this.dismissSpinner();
       this.unlistenForNotificationSettingsDidLoad();
     });
   }
 
   private unlistenForNotificationSettingsDidLoad() {
     this.events.unsubscribe('notificationSettings:load', null);
+  }
+
+  private listenForSpinnerDismissEvent() {
+    this.events.subscribe('exercises:spinner-dismiss', () => {
+      this.dismissSpinner();
+    });
+  }
+
+  private dismissSpinner() {
+    if (this.spinner) this.spinner.dismiss();
   }
 
 

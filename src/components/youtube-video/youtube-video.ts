@@ -36,7 +36,6 @@ export class YoutubeVideoComponent {
 
   private setOnlineStatus(flag) {
     this._zone.run(() => {
-      console.log('setting status to: '+flag);
       this.isOnline = flag;
     });
   }

@@ -45,17 +45,19 @@ export class ExerciseProvider {
       this.getCategoriesFromWordpress()
         .timeout(this.config.REST_TIMEOUT_DURATION)
         .subscribe(unsortedCategories => {
+
           const categories = unsortedCategories.sort(this.compareCategoriesByOrder);
           this.getExercisesFromWordpress()
             .timeout(this.config.REST_TIMEOUT_DURATION)
             .subscribe(exercises => {
+
               this.receivedDataFromRest = true;
               this.handleComparisionOfData(localData, exercises, categories);
             },
-              err => { this.canDisplaySpinner = false; }
+              err => { this.handleRequestError(); }
           );
         },
-          err => { this.canDisplaySpinner = false; }
+          err => { this.handleRequestError(); }
       );
     });
   }
@@ -128,6 +130,19 @@ export class ExerciseProvider {
       this.prepareNotifications();
     }
     this.emitSettingsDidLoad();
+  }
+
+  public emitSpinnerDismissEvent() {
+    this.events.publish('exercises:spinner-dismiss', null, null);
+  }
+
+  private handleRequestError() {
+    this.setDisplaySpinnerStatus(false);
+    this.emitSpinnerDismissEvent();
+  }
+
+  private setDisplaySpinnerStatus(flag) {
+    this.canDisplaySpinner = flag;
   }
 
   private getCategoriesFromWordpress() {

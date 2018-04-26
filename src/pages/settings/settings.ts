@@ -25,6 +25,7 @@ export class SettingsPage {
       this.spinner = this.loadingCtrl.create({
         content: 'Bitte warten...',
       });
+      this.listenForSpinnerDismissEvent();
     }
     this.listenForNotificationSettingsDidLoad();
     //this.listenForNotificationSettingsDidChange();
@@ -59,6 +60,16 @@ export class SettingsPage {
   private unlistenForNotificationSettingsDidChange() {
     this.events.unsubscribe('notificationSettings:change', null);
   }*/
+
+  private dismissSpinner() {
+    if (this.spinner) this.spinner.dismiss();
+  }
+
+  private listenForSpinnerDismissEvent() {
+    this.events.subscribe('exercises:spinner-dismiss', () => {
+      this.dismissSpinner();
+    });
+  }
 
   private listenForNotificationSettingsDidLoad() {
     if (this.exerciseProvider.receivedDataFromRest) {
