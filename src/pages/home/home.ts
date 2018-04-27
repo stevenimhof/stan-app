@@ -16,7 +16,13 @@ export class HomePage {
     private events: Events,
     private storage: Storage) {
     this.listenForMotivationsDidChange();
-    this.getDailyMotivation();
+  }
+
+  ionViewWillEnter() {
+    if (this.dailyMotivation) {
+      this.motivationProvider.setDailyMotivation();
+      this.getDailyMotivation();
+    }
   }
 
   public deleteStorage() {
@@ -25,6 +31,10 @@ export class HomePage {
     this.storage.remove('notificationSettings');
     this.storage.remove('theories');
     this.storage.remove('wp_pages');
+  }
+
+  public setOldDate() {
+    this.motivationProvider.changeMotivation();
   }
 
   public loadSettings() {

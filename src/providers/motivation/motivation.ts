@@ -20,19 +20,19 @@ export class MotivationProvider {
   constructor(public http: HttpClient,
     private config: Config,
     private storage: Storage,
-    private events: Events) {
-  }
+    private events: Events) { }
 
   // only for testing purposes
   public changeMotivation() {
     this.getMotivationStorage().then(result => {
       result.settings.date = new Date(0).toJSON().slice(0, 10).replace(/-/g, '/');
+      this.motivations = result;
       this.storage.set('motivations', result);
     });
   }
 
   public getDailyMotivation() {
-      return this.dailyMotivation;
+    return this.dailyMotivation;
   }
 
   /**
@@ -47,23 +47,41 @@ export class MotivationProvider {
         this.setDailyMotivation(localMotivations['motivations']);
       }
       this.getMotivationsFromWordpress()
-      .timeout(this.config.REST_TIMEOUT_DURATION)
-      .subscribe(motivations => {
-        if (!this.compareMotivations(localMotivations, motivations)) {
-          const tempMotivations = {
-            ...localMotivations,
-            "motivations": motivations
-          };
-          this.motivations = tempMotivations;
-          this.saveMotivations(tempMotivations);
+        .timeout(this.config.REST_TIMEOUT_DURATION)
+        .subscribe(motivations => {
+          if (!this.compareMotivations(localMotivations, motivations)) {
+            const tempMotivations = {
+              ...localMotivations,
+              "motivations": motivations
+            };
+            this.motivations = tempMotivations;
+            this.saveMotivations(tempMotivations);
 
-          // if there were no local motivations, we want to set a new daily motivation
-          // from the rest data
-          if (!localMotivations) {
-            this.setDailyMotivation(motivations);
+            // if there were no local motivations, we want to set a new daily motivation
+            // from the rest data
+            if (!localMotivations) {
+              this.setDailyMotivation(motivations);
+            }
           }
-        }
-      });
+        });
+    });
+  }
+
+  public setDailyMotivation(motivations = null) {
+    if (motivations === null) {
+      motivations = this.motivations['motivations'];
+    }
+    const possibleDailyMotivations = this.getPossibleDailyMotivations(motivations);
+    const dailyMotivation = this.getRandomMotivation(possibleDailyMotivations);
+
+    this.dailyMotivation = dailyMotivation;
+    this.emitMotivationsDidChange();
+    this.saveMotivations({
+      "motivations": motivations,
+      "settings": {
+        "date": this.getCurrentDate(),
+        "lastMotivationID": dailyMotivation.id
+      }
     });
   }
 
@@ -73,21 +91,6 @@ export class MotivationProvider {
         return result;
       })
       .catch(error => Observable.throw("Error while trying to get motivations-data from server"));
-  }
-
-  private setDailyMotivation(motivations) {   
-    const possibleDailyMotivations = this.getPossibleDailyMotivations(motivations);
-    const dailyMotivation = this.getRandomMotivation(possibleDailyMotivations);
-
-    this.dailyMotivation = dailyMotivation;
-    this.emitMotivationsDidChange();
-    this.saveMotivations({
-      "motivations" : motivations,
-      "settings": {
-        "date": this.getCurrentDate(),
-        "lastMotivationID": dailyMotivation.id
-      }
-    });
   }
 
   /**
@@ -149,7 +152,7 @@ export class MotivationProvider {
   private hasLastDailyMotivation() {
     if (this.motivations && this.motivations.hasOwnProperty('settings')
       && this.motivations.settings.hasOwnProperty('lastMotivationID')) {
-        return true;
+      return true;
     }
     return false;
   }
@@ -177,6 +180,7 @@ export class MotivationProvider {
       ...this.motivationStorageModel,
       ...motivations
     };
+    this.motivations = tempMotivations;
     return this.getMotivationStorage().then(() => {
       return this.storage.set('motivations', tempMotivations);
     });

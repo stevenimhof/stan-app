@@ -19,8 +19,7 @@ export class ExerciseProvider {
   constructor(public http: HttpClient,
     private config: Config,
     private storage: Storage,
-    private events: Events) {
-  }
+    private events: Events) { }
 
   public saveExerciseData() {
     return this.getExerciseStorage().then(() => {
@@ -30,6 +29,120 @@ export class ExerciseProvider {
         "notificationSettings": this.notifications
       });
     });
+  }
+
+  /**
+   * Checks for updates by comparing data from server and from local storage
+   * If there is a new version on the server, it will be saved in the local storage.
+   * In addition, it emits an event that the data is now available via the storage.
+   */
+  public checkForUpdates() {
+    this.getExerciseStorage().then(localData => {
+      this.categories = localData ? localData['categories'] : [];
+      this.exercises = localData ? localData['exercises'] : [];
+      this.notifications = localData ? localData['notificationSettings'] : [];
+
+      this.getCategoriesFromWordpress()
+        .timeout(this.config.REST_TIMEOUT_DURATION)
+        .subscribe(unsortedCategories => {
+
+          const categories = unsortedCategories.sort(this.compareCategoriesByOrder);
+          this.getExercisesFromWordpress()
+            .timeout(this.config.REST_TIMEOUT_DURATION)
+            .subscribe(exercises => {
+
+              this.receivedDataFromRest = true;
+              this.handleComparisionOfData(localData, exercises, categories);
+            },
+              err => { this.handleRequestError(); }
+          );
+        },
+          err => { this.handleRequestError(); }
+      );
+    });
+  }
+
+  public getCategories() {
+    return this.categories;
+  }
+
+  public getExercises() {
+    return this.exercises;
+  }
+
+  public getSettings() {
+    return this.notifications;
+  }
+
+  public emitExercisesDidChange() {
+    this.events.publish('exercises:change', null, null);
+  }
+
+  public emitSettingsDidLoad() {
+    this.events.publish('notificationSettings:load', null, null);
+  }
+
+  /**
+   * Prepare the notification list based on the data from the exercise categories
+   */
+  public prepareNotifications() {
+    if (!this.categories.length) return;
+    // do we have any notifications? if that's not the case we need to
+    // create a list from the exercise categories
+    if (this.notifications === undefined || !this.notifications.length) {
+      this.copyAllNotificationsFromCategories();
+      this.saveExerciseData();
+    } else {
+      // compare exercise categories and items in notification settings
+      // if there's a change we need to update our list
+      if (JSON.stringify(this.categories) !== JSON.stringify(this.notifications)) {
+        this.updateSettings();
+        this.saveExerciseData();
+      }
+    }
+  }
+
+  /**
+   * Update the list of notification settings
+   * 
+   * Take the current notification settings and add any new items
+   * from the exercise category list. Don't change the 'isActive' property 
+   * of the current notification settings
+   */
+  private updateSettings() {
+    const temp: any = this.notifications;
+    this.copyAllNotificationsFromCategories();
+    this.notifications.forEach(item => {
+      const found = temp.find(el => el.id === item.id);
+      if (found) {
+        item.isActive = found.isActive;
+      }
+    });
+  }
+
+  private handleComparisionOfData(localData, exercises, categories) {
+    if (!this.compareExerciseData(localData, exercises, categories)) {
+      this.categories = categories;
+      this.exercises = exercises;
+
+      this.emitExercisesDidChange();
+      this.saveExerciseData();
+      this.prepareNotifications();
+    }
+    this.emitSettingsDidLoad();
+  }
+
+  public emitSpinnerDismissEvent() {
+    this.events.publish('exercises:spinner-dismiss', null, null);
+  }
+
+  private handleRequestError() {
+    this.setDisplaySpinnerStatus(false);
+    this.emitSpinnerDismissEvent();
+  }
+
+  private setDisplaySpinnerStatus(flag) {
+    this.canDisplaySpinner = flag;
   }
 
   private getCategoriesFromWordpress() {
@@ -53,106 +166,6 @@ export class ExerciseProvider {
         return result;
       })
       .catch(error => Observable.throw("Error while trying to get data from server"));
-  }
-
-  /**
-   * Checks for updates by comparing data from server and from local storage
-   * If there is a new version on the server, it will be saved in the local storage.
-   * In addition, it emits an event that the data is now available via the storage.
-   */
-  public checkForUpdates() {
-    this.getExerciseStorage().then(localData => {
-      this.categories = localData ? localData['categories'] : [];
-      this.exercises = localData ? localData['exercises'] : [];
-      this.notifications = localData ? localData['notificationSettings'] : [];
-
-      this.getCategoriesFromWordpress()
-        .timeout(this.config.REST_TIMEOUT_DURATION)
-        .subscribe(unsortedCategories => {
-          const categories = unsortedCategories.sort(this.compareCategoriesByOrder);
-          this.getExercisesFromWordpress()
-            .timeout(this.config.REST_TIMEOUT_DURATION)
-            .subscribe(exercises => {
-              this.receivedDataFromRest = true;
-
-              if (!this.compareExerciseData(localData, exercises, categories)) {
-                this.categories = categories;
-                this.exercises = exercises;
-
-                this.emitExercisesDidChange();
-                this.saveExerciseData();
-                this.prepareNotifications();
-              }
-              this.emitSettingsDidLoad();
-            },
-            err => { this.canDisplaySpinner = false; }
-          );
-        },
-        err => { this.canDisplaySpinner = false; }
-      );
-    });
-  }
-
-  public getCategories() {
-    return this.categories;
-  }
-
-  public getExercises() {
-    return this.exercises;
-  }
-
-  public getSettings() {
-    return this.notifications;
-  }
-
-  public emitExercisesDidChange() {
-    this.events.publish('exercises:change', null, null);
-  }
-
-  // public emitSettingsDidChange() {
-  //   this.events.publish('notificationSettings:change', null, null);
-  // }
-
-  public emitSettingsDidLoad() {
-    this.events.publish('notificationSettings:load', null, null);
-  }
-
-    /**
-   * Prepare the notification list based on the data from the exercise categories
-   */
-  public prepareNotifications() {
-    if (!this.categories.length) return;
-    // do we have any notifications? if that's not the case we need to
-    // create a list from the exercise categories
-    if (this.notifications === undefined || !this.notifications.length) {
-      this.copyAllNotificationsFromCategories();
-      this.saveExerciseData();
-    } else {
-      // compare exercise categories and items in notification settings
-      // if there's a change we need to update our list
-      if (JSON.stringify(this.categories) !== JSON.stringify(this.notifications)) {
-        this.updateSettings();
-        this.saveExerciseData();
-      }
-    }
-  }
-
-    /**
-   * Update the list of notification settings
-   * 
-   * Take the current notification settings and add any new items
-   * from the exercise category list. Don't change the 'isActive' property 
-   * of the current notification settings
-   */
-  private updateSettings() {
-    const temp: any = this.notifications;
-    this.copyAllNotificationsFromCategories();
-    this.notifications.forEach(item => {
-      const found = temp.find(el => el.id === item.id);
-      if (found) {
-        item.isActive = found.isActive;
-      }
-    });
   }
 
   private copyAllNotificationsFromCategories() {

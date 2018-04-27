@@ -9,13 +9,5 @@
 
 <ion-content padding>
   <div [innerHtml]=theory.content.rendered></div>
-
-  <div *ngIf="videoSrc">
-    <iframe *ngIf="hasInternetConnectivity" [src]="videoSrc" frameborder="0" allowfullscreen="true"></iframe>
-    <ion-card *ngIf="!hasInternetConnectivity">
-      <ion-card-content>
-        <ion-icon name="alert"></ion-icon> Hier sollte ein Video erscheinen, es scheint jedoch dass du keine Internet-Verbindung hast. Bitte überprüfe deine Internet-Verbindung.
-      </ion-card-content>
-    </ion-card>
-  </div>
+  <youtube-video [id]="videoId"></youtube-video>
 </ion-content>

@@ -1,0 +1,10 @@
+<div *ngIf="videoId">
+  <div *ngIf="isOnline" class="wrapper">
+    <iframe [src]="videoId" frameborder="0" allowfullscreen="true"></iframe>
+  </div>
+  <ion-card *ngIf="!isOnline">
+    <ion-card-content>
+      <ion-icon name="alert"></ion-icon> Hier sollte ein Video erscheinen, es scheint jedoch dass du keine Internet-Verbindung hast. Bitte überprüfe deine Internet-Verbindung.
+    </ion-card-content>
+  </ion-card>
+</div>

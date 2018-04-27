@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Network } from '@ionic-native/network';
+import { NavParams } from 'ionic-angular';
 
 @Component({
   selector: 'page-exercise',
@@ -9,35 +7,16 @@ import { Network } from '@ionic-native/network';
 })
 export class ExercisePage {
   exercise: any;
-  videoSrc = null;
-  hasInternetConnectivity = navigator.onLine;
+  videoId;
 
   constructor(
-  	public navCtrl: NavController,
-    public navParams: NavParams,
-    private sanitizer: DomSanitizer,
-    private network: Network) {
-
-    this.exercise = navParams.get('exercise');
-    this.watchInternetConnectivity();
-    this.setVideoUrl();
+    private navParams: NavParams) {
+    this.exercise = this.navParams.get('exercise');
+    this.setVideoId();
   }
 
-  private watchInternetConnectivity() {
-    this.network.onDisconnect().subscribe(() => {
-      this.hasInternetConnectivity = false;
-    });
-    this.network.onConnect().subscribe(() => {
-      this.hasInternetConnectivity = true;
-
-    });
-  }
-
-  private setVideoUrl() {
-    if (this.exercise.acf.youtube_video_id) {
-      const url = 'https://www.youtube.com/embed/' + this.exercise.acf.youtube_video_id;
-      this.videoSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    }
+  private setVideoId() {
+    this.videoId = this.exercise.acf.youtube_video_id;
   }
 
 }

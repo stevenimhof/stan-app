@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, Events, LoadingController } from 'ionic-angular';
+import { NavController, Events, LoadingController } from 'ionic-angular';
 import { ExerciseProvider } from '../../providers/exercise/exercise';
-import { NotificationProvider } from '../../providers/notification/notification';
 
 import { AboutPage } from "../about/about";
 
@@ -10,15 +9,12 @@ import { AboutPage } from "../about/about";
   templateUrl: 'settings.html',
 })
 export class SettingsPage {
-
   categories = [];
   notifications = [];
   spinner = null;
 
   constructor(private navCtrl: NavController,
-    private navParams: NavParams,
     private exerciseProvider: ExerciseProvider,
-    private notificationProvider: NotificationProvider,
     private loadingCtrl: LoadingController,
     private events: Events) {
       this.init();
@@ -29,6 +25,7 @@ export class SettingsPage {
       this.spinner = this.loadingCtrl.create({
         content: 'Bitte warten...',
       });
+      this.listenForSpinnerDismissEvent();
     }
     this.listenForNotificationSettingsDidLoad();
     //this.listenForNotificationSettingsDidChange();
@@ -48,12 +45,12 @@ export class SettingsPage {
     this.navCtrl.push(AboutPage);
   }
 
-  private setNotifications() {
+  /*private setNotifications() {
     this.exerciseProvider.prepareNotifications();
     this.notifications = this.exerciseProvider.getSettings();
-  }
+  }*/
 
-  private listenForNotificationSettingsDidChange() {
+  /*private listenForNotificationSettingsDidChange() {
     this.events.subscribe('notificationSettings:change', () => {
       this.setData();
       this.unlistenForNotificationSettingsDidChange();
@@ -62,6 +59,16 @@ export class SettingsPage {
 
   private unlistenForNotificationSettingsDidChange() {
     this.events.unsubscribe('notificationSettings:change', null);
+  }*/
+
+  private dismissSpinner() {
+    if (this.spinner) this.spinner.dismiss();
+  }
+
+  private listenForSpinnerDismissEvent() {
+    this.events.subscribe('exercises:spinner-dismiss', () => {
+      this.dismissSpinner();
+    });
   }
 
   private listenForNotificationSettingsDidLoad() {
@@ -93,7 +100,7 @@ export class SettingsPage {
    * from the exercise category list. Don't change the 'isActive' property 
    * of the current notification settings
    */
-  private updateSettings() {
+  /*private updateSettings() {
     const temp: any = this.notifications;
     this.copyAllNotificationsFromCategories();
     this.notifications.forEach(item => {
@@ -102,13 +109,13 @@ export class SettingsPage {
         item.isActive = found.isActive;
       }
     });
-  }
+  }*/
 
-  private copyAllNotificationsFromCategories() {
+  /*private copyAllNotificationsFromCategories() {
     this.notifications = [];
     this.categories.forEach(cat => {
       this.notifications.push({ id: cat.id, name: cat.name, isActive: true });
     });
-  }
+  }*/
 
 }

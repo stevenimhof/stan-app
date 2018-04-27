@@ -6,25 +6,9 @@
 
 <ion-content padding>
   <div [innerHtml]=exercise.content.rendered></div>
-  <hr>
-  <accordion *ngIf="exercise.acf.theory" headline="Theorie" collapsed="!collapsed">
+
+  <accordion *ngIf="exercise.acf.theory" headline="Erklärung anzeigen" collapsed="!collapsed">
     <div *ngIf="exercise.acf.theory" [innerHtml]="exercise.acf.theory"></div>
-    <iframe *ngIf="hasInternetConnectivity && videoSrc" [src]="videoSrc" frameborder="0" allowfullscreen="true"></iframe>
-    <ion-card *ngIf="!hasInternetConnectivity">
-        <ion-card-content>
-            <ion-icon name="alert"></ion-icon> No Internet connection. Please check your connection to see an addtional video.
-        </ion-card-content>
-      </ion-card>
+    <youtube-video [id]="videoId"></youtube-video>
   </accordion>
-  <hr>
-  <ion-grid>
-    <ion-row>
-      <ion-col col-7>
-        <ion-range min="0" max="10" step="1" snaps="true" [(ngModel)]="value"></ion-range>
-      </ion-col>
-      <ion-col col-5>
-        <button ion-button block clear>{{value == null ? "0" : value}} : bewerten</button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
 </ion-content>
