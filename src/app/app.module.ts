@@ -19,8 +19,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
-import { KeepHtmlPipe } from '../pipes/keep-html/keep-html';
-import { StripHtmlPipe } from '../pipes/strip-html/strip-html';
 import { AccordionComponent } from '../components/accordion/accordion';
 import { Network } from '@ionic-native/network';
 
@@ -43,8 +41,6 @@ import { YoutubeVideoComponent } from '../components/youtube-video/youtube-video
     TabsPage,
     SettingsPage,
     AboutPage,
-    KeepHtmlPipe,
-    StripHtmlPipe,
     AccordionComponent,
     YoutubeVideoComponent
   ],
