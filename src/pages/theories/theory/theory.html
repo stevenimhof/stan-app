@@ -1,0 +1,13 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{ theory.title.rendered }}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div [innerHtml]=theory.content.rendered></div>
+  <youtube-video [id]="videoId"></youtube-video>
+</ion-content>

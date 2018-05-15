@@ -1,11 +1,12 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      About
+      Impressum
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-
+<ion-content>
+    <div padding class="content" *ngIf="mainContent" [innerHtml]="mainContent.content.rendered">
+    </div>
 </ion-content>

@@ -1,0 +1,11 @@
+<div>
+  <button class='title' (click)="toggle()">
+    <ion-icon [name]="collapsed ? 'arrow-forward' : 'arrow-down'"></ion-icon>
+    {{headline}}
+  </button>
+  <div #accordionWrapper class='content' [class.collapsed]="collapsed">
+    <div class="inner">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

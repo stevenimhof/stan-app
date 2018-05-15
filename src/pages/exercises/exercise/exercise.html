@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{exercise.title.rendered}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div [innerHtml]=exercise.content.rendered></div>
+
+  <accordion *ngIf="exercise.acf.theory" headline="Erklärung anzeigen" collapsed="!collapsed">
+    <div *ngIf="exercise.acf.theory" [innerHtml]="exercise.acf.theory"></div>
+    <youtube-video [id]="videoId"></youtube-video>
+  </accordion>
+</ion-content>

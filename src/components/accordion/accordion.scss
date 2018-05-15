@@ -1,0 +1,28 @@
+accordion {
+
+    .title {
+        padding: 10px;
+        background: #ddd;
+        margin: 0;
+    }
+
+    .accordion-wrapper {
+        transition: 0.2s linear;
+    } 
+
+    .content {
+        border:1px solid #ddd;
+        overflow:hidden;
+        transition:max-height 0.3s cubic-bezier(1,0,1,0);
+        height:auto;
+        &.collapsed {
+            height: 0 !important;
+            max-height: 0;
+            border-bottom-width: 0px;
+        }
+        .inner {
+            padding: 10px;
+        }
+    }
+ 
+}

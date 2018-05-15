@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Einstellungen</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="wrap">
+
+  <ion-list >
+    <ion-list-header>
+      Push-Mitteilungen
+    </ion-list-header>
+
+    <ion-item *ngFor="let item of notifications">
+      <ion-label>{{item.name}}</ion-label>
+      <ion-toggle *ngIf="item" [(ngModel)]="item.isActive" (ngModelChange)="onChange()"></ion-toggle>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-list>
+    <button ion-item (click)="loadAbout()">
+      Impressum
+    </button>
+  </ion-list>
+
+</ion-content>

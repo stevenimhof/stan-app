@@ -1,0 +1,10 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Info</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+    <div padding class="content" *ngIf="mainContent" [innerHtml]="mainContent.content.rendered">
+    </div>
+</ion-content>

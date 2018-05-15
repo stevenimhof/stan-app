@@ -1,17 +1,25 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>STAN</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="loadSettings()">
+        <ion-icon name="settings"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
+  <p><strong>S</strong>totterer <strong>T</strong>raining und <strong>a</strong>ppintegrierte <strong>N</strong>achsorge</p>
   <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+      Was haben Charles Darwin, Marilyn Monroe, Mr. Bean, Bruce Willis und Ed Sheeran gemeinsam? Sie stottern. 
+      Von dieser Redeflussstörung sind auch rund 80'000 Personen in der Schweiz betroffen. Doch es gibt etwas, das dich im Alltag unterstützen kann: Trainiere an deinem Stottern - mit <strong>STAN</strong>
+    </p>
 </ion-content>
+<ion-footer>
+  <div id="dailyMotivation" *ngIf="dailyMotivation">
+    <div class="inner" [innerHTML]="dailyMotivation.content.rendered">
+    </div>
+  </div>
+</ion-footer>
+

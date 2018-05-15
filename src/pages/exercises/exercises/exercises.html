@@ -1,0 +1,37 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Übungen</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-list>
+    <div *ngIf="!isAtLeastOneCategoryVisible()">
+      <ion-card>
+          <ion-card-content>
+            Keine Inhalte verfügbar
+          </ion-card-content>
+      </ion-card>
+    </div>
+    <div *ngFor="let category of categories">
+      <div *ngIf="isCategoryVisible(category)">
+        <ion-item class="item-stable"
+          (click)="toggleCategory(category)"
+          [ngClass]="{active: isCategoryShown(category)}">
+          <ion-icon [name]="isCategoryShown(category) ? 'arrow-down' : 'arrow-forward'"></ion-icon>
+          &nbsp; {{category.name}}
+        </ion-item>
+        <button ion-item class="item-accordion"
+          *ngFor="let exercise of category.exercises"
+          [ngClass]="{'custom-fadeout':!isCategoryShown(category)}" (click)="loadExercise(exercise)">
+          <ion-label no-margin (click)="loadExercise(exercise)">
+            {{exercise.title.rendered}}
+          </ion-label>
+        </button>
+      </div>
+    </div>
+  </ion-list>
+</ion-content>
