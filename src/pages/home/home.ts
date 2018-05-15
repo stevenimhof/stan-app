@@ -3,7 +3,6 @@ import { Content } from 'ionic-angular';
 import { NavController, Events } from 'ionic-angular';
 import { SettingsPage } from "../settings/settings";
 import { MotivationProvider } from "../../providers/motivation/motivation";
-import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-home',
@@ -15,8 +14,7 @@ export class HomePage {
 
   constructor(private navCtrl: NavController,
     private motivationProvider: MotivationProvider,
-    private events: Events,
-    private storage: Storage) {
+    private events: Events) {
     this.listenForMotivationsDidChange();
   }
 
@@ -25,18 +23,6 @@ export class HomePage {
       this.motivationProvider.setDailyMotivation();
       this.getDailyMotivation();
     }
-  }
-
-  public deleteStorage() {
-    this.storage.remove('exercises');
-    this.storage.remove('motivations');
-    this.storage.remove('notificationSettings');
-    this.storage.remove('theories');
-    this.storage.remove('wp_pages');
-  }
-
-  public setOldDate() {
-    this.motivationProvider.changeMotivation();
   }
 
   public loadSettings() {

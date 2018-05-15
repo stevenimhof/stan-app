@@ -22,15 +22,6 @@ export class MotivationProvider {
     private storage: Storage,
     private events: Events) { }
 
-  // only for testing purposes
-  public changeMotivation() {
-    this.getMotivationStorage().then(result => {
-      result.settings.date = new Date(0).toJSON().slice(0, 10).replace(/-/g, '/');
-      this.motivations = result;
-      this.storage.set('motivations', result);
-    });
-  }
-
   public getDailyMotivation() {
     return this.dailyMotivation;
   }

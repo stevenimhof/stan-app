@@ -15,7 +15,5 @@ export class TabsPage {
   tab3Root = TheoriesPage;
   tab4Root = InfoPage;
 
-  constructor() {
-
-  }
+  constructor() {}
 }

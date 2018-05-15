@@ -17,7 +17,7 @@ export class SettingsPage {
     private exerciseProvider: ExerciseProvider,
     private loadingCtrl: LoadingController,
     private events: Events) {
-      this.init();
+    this.init();
   }
 
   public init() {
@@ -28,7 +28,6 @@ export class SettingsPage {
       this.listenForSpinnerDismissEvent();
     }
     this.listenForNotificationSettingsDidLoad();
-    //this.listenForNotificationSettingsDidChange();
     this.setData();
   }
 
@@ -44,22 +43,6 @@ export class SettingsPage {
   public loadAbout() {
     this.navCtrl.push(AboutPage);
   }
-
-  /*private setNotifications() {
-    this.exerciseProvider.prepareNotifications();
-    this.notifications = this.exerciseProvider.getSettings();
-  }*/
-
-  /*private listenForNotificationSettingsDidChange() {
-    this.events.subscribe('notificationSettings:change', () => {
-      this.setData();
-      this.unlistenForNotificationSettingsDidChange();
-    });
-  }
-
-  private unlistenForNotificationSettingsDidChange() {
-    this.events.unsubscribe('notificationSettings:change', null);
-  }*/
 
   private dismissSpinner() {
     if (this.spinner) this.spinner.dismiss();
@@ -92,30 +75,4 @@ export class SettingsPage {
   private receivedNotificationSettings() {
     if (this.spinner) this.spinner.dismiss();
   }
-
-  /**
-   * Update the list of notification settings
-   * 
-   * Take the current notification settings and add any new items
-   * from the exercise category list. Don't change the 'isActive' property 
-   * of the current notification settings
-   */
-  /*private updateSettings() {
-    const temp: any = this.notifications;
-    this.copyAllNotificationsFromCategories();
-    this.notifications.forEach(item => {
-      const found = temp.find(el => el.id === item.id);
-      if (found) {
-        item.isActive = found.isActive;
-      }
-    });
-  }*/
-
-  /*private copyAllNotificationsFromCategories() {
-    this.notifications = [];
-    this.categories.forEach(cat => {
-      this.notifications.push({ id: cat.id, name: cat.name, isActive: true });
-    });
-  }*/
-
 }

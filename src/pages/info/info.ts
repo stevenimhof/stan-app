@@ -11,8 +11,8 @@ export class InfoPage {
 
   constructor(private events: Events,
     private wpPageProvider: WpPageProvider) {
-      this.listenForPagesDidChange();
-      this.mainContent = this.wpPageProvider.getInfoPage();
+    this.listenForPagesDidChange();
+    this.mainContent = this.wpPageProvider.getInfoPage();
   }
 
   private listenForPagesDidChange() {

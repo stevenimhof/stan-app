@@ -11,8 +11,8 @@ export class AboutPage {
 
   constructor(private events: Events,
     private wpPageProvider: WpPageProvider) {
-      this.listenForPagesDidChange();
-      this.mainContent = this.wpPageProvider.getAboutPage();
+    this.listenForPagesDidChange();
+    this.mainContent = this.wpPageProvider.getAboutPage();
   }
 
   private listenForPagesDidChange() {

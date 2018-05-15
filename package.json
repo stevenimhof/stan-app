@@ -1,8 +1,8 @@
 {
   "name": "stan-app",
-  "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "version": "0.1.0",
+  "author": "Steven Imhof & Alexander Nakamura",
+  "homepage": "http://stan.stevenimhof.ch",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
